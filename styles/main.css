@@ -1,0 +1,76 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    font-size: 10px;
+    font-family: 'Poppins', sans-serif;
+}
+/* CODE FOR HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 1.5px solid #ccc;
+}
+div.logo {
+    vertical-align: bottom;
+    margin-top: 7px;
+}
+header h2 {
+    display: inline-block;
+    font-size: 2rem;
+    line-height: 1.9rem;
+    font-family: 'Lilita One', cursive;
+    text-shadow: 1px 1px 1px rgb(241, 158, 32), -1px -1px 1px rgb(241, 158, 32);
+    font-weight: 400;
+}
+header div.logo i {
+    font-size: 2rem;
+    color: rgb(241, 158, 32);
+}
+a{
+    display: inline-block;
+    text-decoration: none;
+    color: #ccc;
+    font-size: 1.4rem;
+    margin: 0 15px;
+}
+a > i {
+    font-size: 2rem;
+}
+div.link a:hover  {
+    color: rgb(0, 0, 0);
+    font-weight: 700;
+}
+a.active  {
+    color: rgb(0, 0, 0) !important;
+    font-weight: 700 !important;
+}
+div.profiler {
+    display: flex;
+}
+div.profiler > div {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    margin: 0 5px;
+    text-align: center;
+}
+div.profiler > div:nth-child(1) {
+    padding: 0.5rem 0.5rem;
+}
+div.profiler div.notificationBtn div {
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    z-index: 100;
+    font-size: 2rem;
+    margin: 0.5rem 0.5rem;
+}
+div.notificationBtn i {
+    font-size: 1.5rem;
+}

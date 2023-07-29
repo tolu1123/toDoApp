@@ -1,0 +1,424 @@
+/* MAIN UI FOR THE BODY */
+div.sideLink {
+    display: none;
+}
+div.side > div.close {
+    display: none;
+}
+input[type= search] {
+    width: 100%;
+    height: 40px;
+    font-size: 2.5rem;
+    padding: 0.75rem 1rem;
+}
+div.button button {
+    width: 100%;
+    background-color: #000;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 0.75rem;
+    text-align: center;
+}
+div.projectDisplay {
+    height: 280px;
+    border-bottom: 0.25px solid #ccc;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    overflow: auto;
+}
+div.projectMeeting div.title{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    padding: 10px 10px;
+}
+div.title h3 {
+    text-transform: capitalize;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+div.title h6 {
+    font-size: 1.3rem;
+    color: #aaa;
+    font-weight: 300;
+    padding: 5px 0 0 0;
+}
+div.title h6:hover {
+    color: #000;
+    font-weight: 500;
+    font-size: 1.4rem;
+}
+div.title h6 i {
+    color: rgb(43, 106, 241);
+}
+div.title h6 i:hover {
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+div.meetingTile {
+    height: 80px;
+    border-bottom: 0.25px solid #ccc;
+    border-top: 0.25px solid #ccc;
+}
+/* Styling the ATTACHED FILE section */
+div.file {
+    padding: 20px 20px 0 20px;
+}
+div.file div.title h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+@media (max-width: 768px) {
+    div.link {
+        display: none;
+    }
+    main {
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 100%;
+        min-height: calc(100vh - 61px);
+    }
+    div.aside {
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        min-width: 40px;
+        z-index: 300;
+        min-height: calc(100vh - 61px);
+        background-color: rgba(0, 0, 0, 0.5);
+        transition: width 2s;
+    }
+    div.sideLink {
+        display: flex;
+        flex-direction: column;
+        width: 45px;
+        background-color: #fff;
+        z-index: 999;
+        border-right: 1px solid #ccc;
+    }
+    div.sideLink a {
+        display: block;
+        padding: 10px 0;
+        text-align: center;
+    }
+    div.side {
+        width: 0;
+        position: relative;
+        left: -250px;
+        top: 0;
+        transition: left 0.5s linear, width 0.5s linear;
+        background-color: #fff;
+        z-index: 666;
+    }
+    div.side > div.close{
+        display: none;
+        position: absolute;
+        right: -3.1rem;
+        top: 10px;
+        border: 1px dashed black;
+        width: 2.5rem;
+        aspect-ratio: 1/1;
+        text-align: center;
+        transition: display 0.05s linear 5s;
+        z-index: -1;
+    }
+    div.side > div.close i {
+        font-size: 2rem;
+        text-align: center;
+    }
+    div.container {
+        position: relative;
+        width: calc(100% - 45px);
+        left: 45px;
+        padding: 20px;
+    }
+    div.file {
+        display: none;
+    }
+
+    div.addProjectBox, div.editProjectBox, div.addTaskBox, div.deleteDialogueBox{ 
+        width: 85%; 
+    }
+    /* THE STYLE FOR THE CREATE NEW TASK BUTTON IN THE MAINUI FOR MOBILE VIEW */
+    div.headDiv + button {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+}
+
+@media (min-width: 992px) {
+    main {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        width: 100%;
+    }
+    div.aside {
+        width: 300px;
+        border-right: 0.25px solid #ccc;
+        min-height: calc(100vh - 61px);
+    }
+    div.container {
+        min-width: calc(100vw - 550px);
+        border-right: 0.25px solid #ccc;
+        padding: 20px;
+    }
+    div.file {
+        width: 250px;
+        /* border: 0.25px solid #ccc; */
+    }
+}
+
+/* Styling the addProjectMenu Box */
+div.addProjectMenu, div.editProjectMenu, div.addTaskMenu, div.deleteDialogueMenu  {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 9999;
+    transition: display 0.7s linear, opacity 0.7s linear;
+}
+div.addProjectBox, div.editProjectBox, div.addTaskBox, div.deleteDialogueBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    min-height: 70%;
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #aaa;
+}
+div.deleteDialogueMenu {
+    z-index: 99999;
+}
+div.deleteDialogueBox {
+    min-height: 30%;
+}
+div.addProjectBox div.closeProject, div.editProjectBox div.closeEditProject, div.addTaskBox div.closeTaskMenu, div.closeDialogueMenu {
+    position: absolute;
+    right: -1.5rem;
+    top: -1.5rem;
+}
+div.closeProject i, div.closeEditProject i, div.closeTaskMenu i, div.closeDialogueMenu i {
+    font-size: 3rem;
+    color: rgb(241, 158, 32);
+}
+
+.deleteQuestion span {
+    color: rgb(241, 158, 32);
+}
+
+.deleteQuestion ~ button {
+    margin: 20px 10px 0 0;
+    color: #fff;
+    font-size: 1.5rem;
+    padding: 0.75rem 0.5rem;
+    font-weight: 500;
+    border: none;
+}
+button.del_yes {
+    background-color: rgb(255, 0, 0);
+}
+button.del_no {
+    background-color: rgb(3, 85, 3);
+}
+button.deleteProject {
+    padding: 0.75rem 0.75rem;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 500;
+    border: none;
+    background-color: rgb(241, 158, 32);
+} 
+div.addProjectBox h1, div.editProjectBox h1, div.addTaskBox h1{
+    font-size: 3rem;
+    margin: 0 0 10px 0;
+}
+div.editProjectBox h1 + p {
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+}
+div.addProjectBox form, form.editForm {
+    width: 100%;
+}
+form label, p.projectType{
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+form input {
+    width: 100%;
+    height: 30px;
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid #aaa;
+    padding: 7.5px 10px;
+}
+input[type= text], input[type= date] {
+    margin: 0 0 20px 0;
+}
+form button {
+    width: 100%;
+    margin: 20px 0;
+    padding: 0.85rem 0;
+    background-color: #000;
+    color: #fff;
+    font-size: 1.5rem;
+    border-radius: 5px 5px;
+}
+input[type=checkbox] + label {
+    vertical-align: super;
+    font-weight: 400;
+    font-size: 1.4rem;
+}
+form input[type= checkbox] {
+    accent-color: rgb(241, 158, 32);
+    color: white;
+    width: 18px;
+    height: 18px;
+}
+
+/* //ADDING STYLES FOR EACH OF THE PROJECT PANEL */
+div.panel { 
+    width: 50%;
+    height: 140px;
+    position: relative;
+    border: 0.25px solid #ccc;
+}
+div.projectBox {
+    width: 70%;
+    height: calc(100% - 2.6rem);
+    margin-left: auto;
+    margin-right: auto;
+}
+div.panel div.imageHolder {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: 35px 0 5px;
+}
+div.panel div.mainFrame {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    overflow: hidden;
+    background-position: center;
+    background-size: cover;
+}
+div.panel h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+div.panel img[src] {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+} 
+div.panel button {
+    width: 100%;
+    height: 2.6rem;
+    background-color: rgba(87, 198, 238, 0.3);
+    color: rgb(87, 87, 238);
+    font-size: 1.3rem;
+    font-weight: 500;
+    padding: 0.5rem 0;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    border: none;
+}
+
+/* //ADDING THE STYLES FOR THE MAINUI */
+div.headingMain {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+}
+div.headDiv {
+    width: 70%;
+}
+div.deadlineHolder {
+    color: #888;
+    font-size: 1.2rem;
+}
+div.headDiv + button {
+    width: 30%;
+    height: 35px;
+    margin: 15px 0 0;
+    background-color: rgb(43, 106, 241);
+    border: none;
+    color: #fff;
+}
+div.container h1 {
+    font-size: 3.0rem;
+    font-weight: 600;
+    display: inline-block;
+    padding-right: 5px;
+}
+p.editPencil {
+    display: inline-block;
+}
+p.editPencil img {
+    width: 15px;
+    height: 15px;
+}
+
+/* STYLING THE PANEL SECTION OF EACH TASKS */
+label.label {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    border: 1px solid #999;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 10px;
+}
+.tick {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 14px;
+    height: 14px;
+}
+ul {
+    list-style-type: none;
+}
+div.dayBody {
+    margin-top: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ccc;
+}
+ul li div:first-child {
+    display: flex;
+}
+ul li {
+    margin: 10px 0;
+}
+ul li div:first-child h3 {
+    vertical-align: text-bottom;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-top: 4px;
+    width: 18%;
+}
+ul li div:first-child p {
+    color: #aaa;
+    font-size: 1.4rem;
+    font-weight: 300;
+    margin-top: 4px;
+    width: 50%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-left: 5px;
+}
