@@ -6,17 +6,33 @@
 html {
     font-size: 10px;
     font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 /* CODE FOR HEADER */
 header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 15px 20px;
-    border-bottom: 1.5px solid #ccc;
+    /* border-bottom: 1.5px solid #ccc; */
 }
 div.logo {
-    vertical-align: bottom;
-    margin-top: 7px;
+    display: flex;
+    gap: 3px;
+    align-items: center;
+    justify-content: center;
+    /* vertical-align: bottom; */
+}
+div.link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.navLink {
+    display: flex;
+    gap: 8px;
 }
 header h2 {
     display: inline-block;
@@ -34,7 +50,8 @@ a{
     display: inline-block;
     text-decoration: none;
     color: #ccc;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 300;
     margin: 0 15px;
 }
 a > i {
@@ -42,11 +59,11 @@ a > i {
 }
 div.link a:hover  {
     color: rgb(0, 0, 0);
-    font-weight: 700;
+    font-weight: 400;
 }
 a.active  {
-    color: rgb(0, 0, 0) !important;
-    font-weight: 700 !important;
+    color: rgb(0, 0, 0);
+    font-weight: 600;
 }
 div.profiler {
     display: flex;
@@ -73,4 +90,33 @@ div.profiler div.notificationBtn div {
 }
 div.notificationBtn i {
     font-size: 1.5rem;
+}
+div.profilePic {
+    background-image: url('../profilePic/profile1.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+/* THE SCROLLBAR */
+/* width */
+::-webkit-scrollbar {
+width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1;
+box-shadow: inset 0 0 5px #f9f9f9; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888; 
+border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #555; 
 }

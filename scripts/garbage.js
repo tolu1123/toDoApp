@@ -264,11 +264,14 @@ function headingMainUI(element, elementId) {
     deadlineHolder.textContent = `Due to ${dateConverter(element.deadline)}`;
 }
 function nextRefresh() {
-    //getting today's date at exactly 12:00 AM so i could know tommorrow's date
-    let todayat12am = new Date(new Date().toLocaleDateString()).getTime();
+    //getting the present date so i could know tommorrow's date
+    let presentTime = new Date();
+    let year = presentTime.getFullYear();
+    let month = presentTime.getMonth() + 1;
+    let day = presentTime.getDate() + 1;
     //tommorrow's date in seconds
-    let tommorrowat12am = todayat12am + (24 * 3600 * 1000);
-    return tommorrowat12am;
+    let nextTime = (new Date(`${month}/${day}/${year}`)).getTime();
+    return nextTime;
 }
 //FUNCTION TO REFRESH THE PAGE ONCE IT IS A NEW DAY
 function newDay(element, elementId) {
@@ -393,18 +396,12 @@ function bodyMainUI(element, elementId) {
         
     })
 }
-let taskCheckBoxManager = '';
 //CREATE TASK LIST
 function createTask(data, ulList) {
     //FOR EACH TASK CREATE A PANE THAT DISPLAYS THE TASK IN THE U.I
-    // data.task.forEach((task, taskNo) => {
-    //     Paner(ulList, task, taskNo);
-    // })
-    let tasker = data.task;
-    for (let i = 0; i < tasker.length; i++) {
-        eachTask = tasker[i];
-        Paner(ulList, eachTask, i);
-    }
+    data.task.forEach((task, taskNo) => {
+        Paner(ulList, task, taskNo);
+    })
     function Paner(ulList, task, taskNo) {
         //CREATE PANE
         let list = document.createElement('li');
@@ -421,39 +418,38 @@ function createTask(data, ulList) {
         label.setAttribute('for', 'check');
 
         let input = document.createElement('input');
-        input.style.display = 'none';
-        input.setAttribute('id', 'check');
-        input.setAttribute('type', 'checkbox');
-        label.appendChild(input);
+            input.style.display = 'none';
+            input.setAttribute('id', 'check');
+            input.setAttribute('type', 'checkbox');
+            label.appendChild(input);
 
-        let tick = document.createElement('img');
-        tick.setAttribute('src', '../image/check16.png');
-        tick.setAttribute('class', 'tick');
-        label.appendChild(tick);
+            let tick = document.createElement('img');
+            tick.setAttribute('src', '../image/check16.png');
+            tick.setAttribute('class', 'tick');
+            label.appendChild(tick);
 
-        label.addEventListener('click', () => {
-            taskCheckBoxManager = task;
-            // if (task.taskStatus === 'undone') {
-            //     label.style.backgroundColor = 'green';
-            //     tick.style.display = 'block';
-            //     task.taskStatus = 'done';
-            // } else if (task.taskStatus === 'done'){
-            //     label.style.backgroundColor = '';
-            //     tick.style.display = 'none';
-            //     task.taskStatus = 'undone';
-            // }
-        });
-        function checkTask(task, input, label, tick) {
-            if (task.taskStatus === 'undone') {
-                label.style.backgroundColor = 'green';
-                tick.style.display = 'block';
-                task.taskStatus = 'done';
-            } else {
-                label.style.backgroundColor = '';
-                tick.style.display = 'none';
-                task.taskStatus = 'undone';
+            label.addEventListener('click', () => {
+                if (task.taskStatus === 'undone') {
+                    label.style.backgroundColor = 'green';
+                    tick.style.display = 'block';
+                    task.taskStatus = 'done';
+                } else if (task.taskStatus === 'done'){
+                    label.style.backgroundColor = '';
+                    tick.style.display = 'none';
+                    task.taskStatus = 'undone';
+                }
+            });
+            function checkTask(task, input, label, tick) {
+                if (task.taskStatus === 'undone') {
+                    label.style.backgroundColor = 'green';
+                    tick.style.display = 'block';
+                    task.taskStatus = 'done';
+                } else {
+                    label.style.backgroundColor = '';
+                    tick.style.display = 'none';
+                    task.taskStatus = 'undone';
+                }
             }
-        }
 
         
         taskPane.appendChild(label);

@@ -24,7 +24,7 @@
                     <h1>ADD NEW PROJECT</h1>
                     <form action="" method="post" class="projectForm">
                         <label for="projectName">Name of Project:</label><br>
-                        <input type="text" id="projectName" name="projectName" placeholder="Name of Project" maxlength="10"><br>
+                        <input type="text" id="projectName" name="projectName" placeholder="Name of Project" maxlength="15"><br>
 
                         <label for="description">Description of Project:</label><br>
                         <input type="text" name="description" id="description" placeholder="Project Description..."><br>
@@ -112,16 +112,18 @@
                     <i class="fa-light fa-book-open-cover"></i>&nbsp;<h2>TO-DO APP</h2>
                 </div>
                 <div class="link">
-                    <a class="active" href="projects.html"><i class="fa-thin fa-briefcase"></i> PROJECTS</a>
-                    <a href="bookings.html"><i class="fa-light fa-calendar-days"></i> BOOKINGS</a>
-                    <a href="personalNotes.html"><i class="fa-thin fa-file-pen"></i>PERSONAL NOTES</a>
+                    <a class="active navLink" href="projects.html"><i class="fa-thin fa-briefcase"></i><span>Projects</span></a>
+                    <a class="navLink" href="bookings.html"><i class="fa-light fa-calendar-days"></i><span>Bookings</span></a>
+                    <a class="navLink" href="personalNotes.html"><i class="fa-thin fa-file-pen"></i><span>Personal Notes</span></a>
                 </div>
                 <div class="profiler">
                     <div class="notificationBtn"><div></div>
                     <i class="fa-regular fa-bell"></i>
                     <!-- <i class="fa-regular fa-bell-slash"></i> -->
                     </div>
-                    <div class="profilePic"></div>
+                    <div class="profilePic">
+                        
+                    </div>
                 </div>
             </header>
             <main>
@@ -136,10 +138,10 @@
                             <i class="fa-sharp fa-solid fa-xmark"></i>
                         </div>
                         <div class="search">
-                            <input type="search" name="search" id="search" placeholder="Search...">
+                            <input type="search" name="search" id="search" placeholder="Search project or member...">
                         </div>
                         <div class="button">
-                            <button>Add new project +</button>
+                            <button><span>Add new project</span> <i class="fa-sharp fa-solid fa-plus"></i></button>
                         </div>
                         <div class="projectDisplay">
                             <!-- No Project has been added. -->
