@@ -389,23 +389,20 @@ function bodyMainUI(element, elementId) {
         let ulList = document.createElement('ul');
         dayBody.appendChild(ulList);
 
-        createTask(data, ulList);
+        createTask(element, data, ulList);
         
     })
 }
-let taskCheckBoxManager = '';
 //CREATE TASK LIST
-function createTask(data, ulList) {
+function createTask(element, data, ulList) {
     //FOR EACH TASK CREATE A PANE THAT DISPLAYS THE TASK IN THE U.I
-    // data.task.forEach((task, taskNo) => {
-    //     Paner(ulList, task, taskNo);
-    // })
-    let tasker = data.task;
-    for (let i = 0; i < tasker.length; i++) {
-        eachTask = tasker[i];
-        Paner(ulList, eachTask, i);
-    }
-    function Paner(ulList, task, taskNo) {
+    data.task.forEach((task, taskNo) => {
+        createTaskList(element, ulList, task, taskNo);
+    })
+     
+
+    function createTaskList(element, ulList, task, taskNo) {
+        console.log('createdTasks!')
         //CREATE PANE
         let list = document.createElement('li');
         ulList.appendChild(list);
@@ -414,47 +411,28 @@ function createTask(data, ulList) {
         list.appendChild(taskPane);
         //THE SHOW MORE SECTION ELEMENT
         let extraDisplay = document.createElement('div');
+        extraDisplay.style.display = 'none';
+        extraDisplay.textContent = 'LOREM IPSUM DOLOR I DO NOT KNOW WHAT I AM MEELING BUT SURELY I HAVE BEEN ABLE TO UNDERSTAND IT WELL.';
         list.appendChild(extraDisplay);
         //MAKING THE CHECK BOX
         let label = document.createElement('label')
         label.setAttribute('class', `label`);
         label.setAttribute('for', 'check');
+        //SET THE DYNAMIC ID FOR THE LABEL ATTRIBUTE
+        label.setAttribute('id', `data_${data.dateReal().replace(/[\\/]/g, '_')}_${taskNo}`);
 
         let input = document.createElement('input');
         input.style.display = 'none';
         input.setAttribute('id', 'check');
         input.setAttribute('type', 'checkbox');
-        label.appendChild(input);
+        // label.appendChild(input);
 
         let tick = document.createElement('img');
         tick.setAttribute('src', '../image/check16.png');
         tick.setAttribute('class', 'tick');
         label.appendChild(tick);
 
-        label.addEventListener('click', () => {
-            taskCheckBoxManager = task;
-            // if (task.taskStatus === 'undone') {
-            //     label.style.backgroundColor = 'green';
-            //     tick.style.display = 'block';
-            //     task.taskStatus = 'done';
-            // } else if (task.taskStatus === 'done'){
-            //     label.style.backgroundColor = '';
-            //     tick.style.display = 'none';
-            //     task.taskStatus = 'undone';
-            // }
-        });
-        function checkTask(task, input, label, tick) {
-            if (task.taskStatus === 'undone') {
-                label.style.backgroundColor = 'green';
-                tick.style.display = 'block';
-                task.taskStatus = 'done';
-            } else {
-                label.style.backgroundColor = '';
-                tick.style.display = 'none';
-                task.taskStatus = 'undone';
-            }
-        }
-
+        
         
         taskPane.appendChild(label);
         //THE TITLE OF THE TASK
@@ -467,13 +445,107 @@ function createTask(data, ulList) {
         let textDescrip = document.createElement('p');
         taskPane.appendChild(textDescrip);
         textDescrip.textContent = task.description;
-        
-    }
-}
-// Function to create separate event listener for each checkbox (using closure)
-function createCheckboxEventListener(task, input, label, tick) {
-    return function() {
-        checkTask(task, input, label, tick);
+
+        label.addEventListener('click', () => {
+            if(element.status === 'self' || element.status === 'teamAdmin'){
+            checkTask(task, label, tick);
+            }
+        });
+
+        function checkTask(task, label, tick) {
+            if (task.taskStatus === 'undone') {
+                label.style.backgroundColor = 'green';
+                tick.style.display = 'block';
+                task.taskStatus = 'done';
+                textDescrip.style.textDecoration = 'line-through';
+            } else {
+                label.style.backgroundColor = '';
+                tick.style.display = 'none';
+                task.taskStatus = 'undone';
+                textDescrip.style.textDecoration = 'none';
+            }
+        }
+        if (task.taskStatus === 'done') {
+            label.style.backgroundColor = 'green';
+            tick.style.display = 'block';
+            task.taskStatus = 'done';
+            textDescrip.style.textDecoration = 'line-through';
+        } else {
+            label.style.backgroundColor = '';
+            tick.style.display = 'none';
+            task.taskStatus = 'undone';
+            textDescrip.style.textDecoration = 'none';
+        }
+
+        let profileDivBtn = document.createElement('div');
+        profileDivBtn.setAttribute('class', 'profileDivBtn');
+        taskPane.appendChild(profileDivBtn);
+
+        //IF THE PROJECT IS A SELF PROJECT
+        if (element.status === 'self') {
+            const assigneeProfilePic = document.createElement('div');
+            assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
+            assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
+            profileDivBtn.appendChild(assigneeProfilePic);
+
+        } else {
+            //IF IT IS A TEAM PROJECT
+            if(task.assignee.indexOf('self') !== -1 && task.assignee.length === 1) {
+                //IF THE TASKS'S ASSIGNEE IS ONLY THE TEAM ADMIN-PUT THE PROFILEPIC OF THE ADMIN
+                const assigneeProfilePic = document.createElement('div');
+                assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
+                assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
+                profileDivBtn.appendChild(assigneeProfilePic);
+            } else if (task.assignee.indexOf('self') !== -1 && task.assignee.length > 1) {
+                //IF THE TASK'S ASSIGNEE CONTAINS TEAM ADMIN AND OTHERS
+                task.assignee.forEach((eachPic, index) => {
+                    if(eachPic === 'self') {
+                        const assigneeProfilePic = document.createElement('div');
+                        assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
+                        assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
+                        assigneeProfilePic.style.transform = `translate(${index * 10}px)`;
+                        profileDivBtn.appendChild(assigneeProfilePic);
+                    } else {
+                        const assigneeProfilePic = document.createElement('div');
+                        assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
+                        assigneeProfilePic.style.backgroundImage = `url(${task.profilePic[index % 3]})`;
+                        assigneeProfilePic.style.transform = `translate(${index * 10}px)`;
+                        profileDivBtn.appendChild(assigneeProfilePic);
+                    }
+                })
+            } else if (task.assignee.indexOf('self') === -1) {
+                //IF THE TASK'S ASSIGNEE DOES NOT CONTAIN THE TEAMADMIN
+                task.assignee.forEach((eachPic, index) => {
+                    const assigneeProfilePic = document.createElement('div');
+                    assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
+                    assigneeProfilePic.style.backgroundImage = `url(${task.profilePic[index % 3]})`;
+                    assigneeProfilePic.style.transform = `translate(${index * 10}px)`;
+                    profileDivBtn.appendChild(assigneeProfilePic);
+                })
+            }
+        }
+
+        let showMoreIcon = document.createElement('div');
+        showMoreIcon.setAttribute('class', 'showMoreIcon');
+        showMoreIcon.innerHTML = '<i class="fa-sharp fa-regular fa-angle-down"></i>';
+        profileDivBtn.appendChild(showMoreIcon);
+
+        //THE ADDEVENT LISTENER TO DISPLAY THE EXTRA DISPLAY.
+        showMoreIcon.addEventListener('click', () => {
+            if(task.taskVisible === 'closed') {
+                showMoreIcon.style.transform = 'rotate(-180deg)';
+                showMoreIcon.style.position = 'relative';
+                showMoreIcon.style.bottom = '4px';
+                task.taskVisible = 'opened';
+                extraDisplay.style.display = 'block';
+            } else {
+                showMoreIcon.style.transform = `rotate(0deg)`;
+                task.taskVisible = 'closed';
+                showMoreIcon.style.position = 'relative';
+                showMoreIcon.style.bottom = '0';
+                extraDisplay.style.display = 'none';
+            }
+        })
     }
 }
 
@@ -547,6 +619,7 @@ addTaskForm.addEventListener('submit', (e) => {
                 description: taskDescription.value.trim(),
                 deadline: taskDeadline.value.trim(),
                 taskStatus: 'undone',
+                taskVisible: 'closed',
                 deadlint() {
                     let date = taskDeadline.value.trim();
                     let year = date.slice(0, 5);
@@ -555,12 +628,8 @@ addTaskForm.addEventListener('submit', (e) => {
 
                     return `${month}/${day}/${year}`;
                 },
-                assignee: [`${addAssignee.value.trim()}`],
-                assignorPic: function () {
-                    if(this.assignee === 'self') {
-                        return '../profilePic/profile1.jpg'; 
-                    }
-                },
+                assignee: [`${addAssignee.value}`],
+                assignorPic: '../profilePic/profile1.jpg',
                 profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
             }
             
@@ -608,6 +677,7 @@ addTaskForm.addEventListener('submit', (e) => {
                     description: taskDescription.value.trim(),
                     deadline: taskDeadline.value.trim(),
                     taskStatus: 'undone',
+                    taskVisible: 'closed',
                     deadlint() {
                         let date = taskDeadline.value.trim();
                         let year = date.slice(0, 5);
@@ -617,11 +687,7 @@ addTaskForm.addEventListener('submit', (e) => {
                         return `${month}/${day}/${year}`;
                     },
                     assignee: [`${addAssignee.value.trim()}`],
-                    assignorPic: function () {
-                        if(this.assignee === 'self') {
-                            return '../profilePic/profile1.jpg'; 
-                        }
-                    },
+                    assignorPic: '../profilePic/profile1.jpg',
                     profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
                 }]
             }
