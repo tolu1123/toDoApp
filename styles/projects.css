@@ -1,6 +1,17 @@
 /* MAIN UI FOR THE BODY */
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 div.sideLink {
     display: none;
+}
+div.side {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 div.side > div.close {
     display: none;
@@ -44,6 +55,12 @@ div.projectDisplay {
     flex-wrap: wrap;
     overflow: auto;
 }
+div.projectMeeting {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 div.projectMeeting div.title{
     display: flex;
     flex-direction: row;
@@ -76,10 +93,11 @@ div.title h6 i:hover {
     font-size: 1.4rem;
 }
 div.meetingTile {
-    min-height: 160px;
+    flex: 1;
     border-bottom: 0.25px solid #eee;
     border-top: 0.25px solid #eee;
     background-color: #f7f7f7;
+    overflow-y: auto;
 }
 /* Styling the ATTACHED FILE section */
 div.file {
@@ -109,7 +127,7 @@ div.file div.title h2 {
         position: absolute;
         min-width: 40px;
         z-index: 300;
-        min-height: calc(100vh - 61px);
+        height: calc(100vh - 60px);
         background-color: rgba(0, 0, 0, 0.5);
         transition: width 2s;
     }
@@ -181,7 +199,7 @@ div.file div.title h2 {
     div.aside {
         width: 300px;
         border-right: 0.25px solid #eee;
-        min-height: calc(100vh - 61px);
+        height: calc(100vh - 60px);
     }
     div.container {
         width: calc(100vw - 550px);

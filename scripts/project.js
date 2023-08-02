@@ -137,7 +137,7 @@ function getFormData() {
         loopThrough()
     }
 }
-
+let panel = ''
 //FUNCTION TO LOOP THROUGH PROJECT ARRAY
 let taskElement = '';
 let taskElementId = 0;
@@ -148,6 +148,7 @@ function loopThrough() {
         projectBox.setAttribute('class', 'projectBox');
         //Create the project panel and set the class
         let projectPanel = document.createElement('div');
+        panel = projectPanel;
         projectPanel.setAttribute('class', 'panel');
         //Create the image placeholder
         let imageHolder = document.createElement('div');
@@ -903,3 +904,24 @@ function saveEditedData() {
         displayUI(formData, elementSpace);
     }
 }
+
+//THE RESIXE EVENT LISTENER TO RESIXE THE WINDOW WHEN IT IS MOBILE VIEW OR DESKTOP VIEW
+window.addEventListener('resize', () => {
+    console.log(window.innerWidth);
+    if(window.innerWidth > 991){
+        side.style.width = 'inherit';
+        closeSideBtn.style.display = 'none';
+    }else if(window.innerWidth < 991){
+        side.style.left = '-250px';
+        side.style.width = '0';
+    }
+    updatePanelSixe()
+});
+
+function updatePanelSixe() {
+    if (projectDisplay.clientWidth > 500) {
+        panel.style.width = `${100 / 3}%`;
+        console.log('sixe');
+    }
+}
+updatePanelSixe()
