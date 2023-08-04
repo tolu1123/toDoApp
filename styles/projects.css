@@ -109,6 +109,16 @@ div.file div.title h2 {
     line-height: 1.6rem;
     text-transform: uppercase;
 }
+@media (min-width: 500px) and (max-width: 700px) {
+    div.panel {
+        width: 33.33% !important;
+    }
+}
+@media (min-width: 701px) and (max-width: 990px) {
+    div.panel {
+        width: 25% !important;
+    }
+}
 @media (max-width: 991px) {
     div.link {
         display: none;

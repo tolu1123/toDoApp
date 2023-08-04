@@ -915,13 +915,5 @@ window.addEventListener('resize', () => {
         side.style.left = '-250px';
         side.style.width = '0';
     }
-    updatePanelSixe()
 });
-
-function updatePanelSixe() {
-    if (projectDisplay.clientWidth > 500) {
-        panel.style.width = `${100 / 3}%`;
-        console.log('sixe');
-    }
-}
-updatePanelSixe()
+ 
