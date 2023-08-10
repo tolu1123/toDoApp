@@ -26,6 +26,7 @@ closeSideBtn.style.display = 'block';
 closeSideBtn.addEventListener('click', closeSideBarFun);
 
 function closeSideBarFun() {
+    console.log('closed');
     closeSideBtn.style.display = 'none';
     side.style.left = '-450px';
     side.style.width = '0';
@@ -47,7 +48,7 @@ addProjectBtn.addEventListener('click', () => {
 
 //EVENT TO CLOSE THE ADDPROJECT BOX 
 closeAddProjectBox.addEventListener('click', closeProjectBox);
-function closeProjectBox () {
+function closeProjectBox() {
     addProjectBox.style.display = 'none';
     addProjectBox.style.opacity = '0';
 }
@@ -79,9 +80,7 @@ function collectProjectData(e) {
 }
 
 function getFormData() {
-    if(projectName.value !== '' && projectDescription.value !== '' && deadline.value !== '' && projectType === 'self'){
-        console.log('yes');
-        
+    if(projectName.value !== '' && projectDescription.value !== '' && deadline.value !== '' && projectType === 'self'){        
         let formData = {
             name: projectName.value,
             id: projectType,
@@ -106,6 +105,10 @@ function getFormData() {
         //Loop through the project Array
         projectDisplay.textContent = '';
         loopThrough()
+        //if the width of the browser is less than 991px
+        if (window.innerWidth < 991){
+            closeSideBarFun();
+        }
 
     }
 
@@ -135,6 +138,10 @@ function getFormData() {
         //Loop through the project Array once again
         projectDisplay.textContent = '';
         loopThrough()
+        //if the width of the browser is less than 991px
+        if (window.innerWidth < 991){
+            closeSideBarFun();
+        }
     }
 }
 let panel = ''
@@ -413,8 +420,10 @@ function createTask(element, data, ulList) {
         //THE SHOW MORE SECTION ELEMENT
         let extraDisplay = document.createElement('div');
         extraDisplay.style.display = 'none';
-        extraDisplay.textContent = 'LOREM IPSUM DOLOR I DO NOT KNOW WHAT I AM MEELING BUT SURELY I HAVE BEEN ABLE TO UNDERSTAND IT WELL.';
+        // extraDisplay.textContent = 'LOREM IPSUM DOLOR I DO NOT KNOW WHAT I AM MEELING BUT SURELY I HAVE BEEN ABLE TO UNDERSTAND IT WELL.';
+        
         list.appendChild(extraDisplay);
+
         //MAKING THE CHECK BOX
         let label = document.createElement('label')
         label.setAttribute('class', `label`);
@@ -455,7 +464,7 @@ function createTask(element, data, ulList) {
 
         function checkTask(task, label, tick) {
             if (task.taskStatus === 'undone') {
-                label.style.backgroundColor = 'green';
+                label.style.backgroundColor = 'mediumseagreen';
                 tick.style.display = 'block';
                 task.taskStatus = 'done';
                 textDescrip.style.textDecoration = 'line-through';
@@ -467,7 +476,7 @@ function createTask(element, data, ulList) {
             }
         }
         if (task.taskStatus === 'done') {
-            label.style.backgroundColor = 'green';
+            label.style.backgroundColor = 'mediumseagreen';
             tick.style.display = 'block';
             task.taskStatus = 'done';
             textDescrip.style.textDecoration = 'line-through';
@@ -547,6 +556,50 @@ function createTask(element, data, ulList) {
                 extraDisplay.style.display = 'none';
             }
         })
+
+        //APPENDING THE CONTENTS OF THE EXTRA DISPLAY INFORMATION
+        let taskTitle = document.createElement('h2');
+        taskTitle.textContent = task.title;
+        //The div that houses the description input and button
+        let taskDescripDiv = document.createElement('div');
+        taskDescripDiv.setAttribute('class', 'taskDescripDiv');
+        
+        //THE textarea for the description;
+        let taskDescriptionContent = document.createElement('textarea');
+        taskDescriptionContent.setAttribute('class', 'disabledTaskDescrip');
+        taskDescriptionContent.disabled = true;
+        taskDescriptionContent.value = task.description;
+        taskDescripDiv.appendChild(taskDescriptionContent);
+        extraDisplay.appendChild(taskTitle);
+        extraDisplay.appendChild(taskDescripDiv);
+        //if i am the admin or a self user then do this.
+        if(element.status === 'teamAdmin' || element.status === 'self') {
+            let editDescriptionBtn = document.createElement('button');
+            editDescriptionBtn.setAttribute('class', 'editDescriptionBtn');
+            editDescriptionBtn.textContent = 'Edit description';
+            taskDescripDiv.appendChild(editDescriptionBtn);
+            
+            let y = 'edit';
+
+            editDescriptionBtn.addEventListener('click', () => {
+                if (y === 'edit') {
+                    y = 'save';
+                    taskDescriptionContent.disabled = false;
+                    taskDescriptionContent.setAttribute('class', 'enableTaskDescrip');
+                    editDescriptionBtn.textContent = 'Save';
+                } else if (y === 'save') {
+                    y = 'edit';
+                    task.description = taskDescriptionContent.value;
+                    taskDescriptionContent.disabled = true;
+                    taskDescriptionContent.setAttribute('class', 'disabledTaskDescrip');
+                    editDescriptionBtn.textContent = 'Edit description';
+                    textDescrip.textContent = task.description;
+                }
+            })
+
+            //Extend Deadline
+            let exte
+        }
     }
 }
 
@@ -848,7 +901,7 @@ function saveEditedData() {
             deadline: editDeadline.value,
             description: editDescription.value,
             teamMember: ['../profilePic/profile1.jpg'],
-            datedSection: []
+            datedSection: project[elementSpace].datedSection
         }
 
         
@@ -869,6 +922,7 @@ function saveEditedData() {
         //Loop through the project Array once again
         projectDisplay.textContent = '';
         loopThrough();
+        markSelectedPanel(elementSpace);
         displayUI(formData, elementSpace);
     }
 
@@ -880,14 +934,12 @@ function saveEditedData() {
             deadline: editDeadline.value,
             description: editDescription.value,
             teamMember: ['../profilePic/profile1.jpg', '../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg'],
-            datedSection: []
+            datedSection: project[elementSpace].datedSection
         }
 
-        
-        //REMOVE THE PRESENT OBJECT AND REPLACE WITH THE EDITED PROJECT
-        project.splice(project[elementSpace], 1)
+        //REMOVE THE PRESENT OBJECT AND REPLACE WITH THE EDITED PROJECT and 
         //Push the created project into the project Array
-        project.push(formData);
+        project.splice(project[elementSpace], 1, formData)
 
         //Clear the input and the rekired variables
         editName.value = '';
@@ -901,13 +953,24 @@ function saveEditedData() {
         //Loop through the project Array once again
         projectDisplay.textContent = '';
         loopThrough();
+        markSelectedPanel(elementSpace);
         displayUI(formData, elementSpace);
     }
 }
 
+//AUTOMATICALLY GET THE PROJECT WE ARE WORKING ON SO WE COULD COLOUR THE PANEL
+function markSelectedPanel(elementSpace) {
+    let element = project[elementSpace];
+    let panels = document.querySelectorAll('.panel');
+    panels.forEach((panel, index) => {
+        if(index === elementSpace) {
+            panelist(element, elementSpace, panel);
+        }
+    })
+}
+
 //THE RESIXE EVENT LISTENER TO RESIXE THE WINDOW WHEN IT IS MOBILE VIEW OR DESKTOP VIEW
 window.addEventListener('resize', () => {
-    console.log(window.innerWidth);
     if(window.innerWidth > 991){
         side.style.width = 'inherit';
         closeSideBtn.style.display = 'none';

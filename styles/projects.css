@@ -138,21 +138,60 @@ div.file div.title h2 {
         min-width: 40px;
         z-index: 300;
         height: calc(100vh - 60px);
-        background-color: rgba(0, 0, 0, 0.5);
+        /* background-color: rgba(0, 0, 0, 0.5); */
         transition: width 2s;
     }
     div.sideLink {
         display: flex;
         flex-direction: column;
         width: 45px;
+        padding: 0 0 0 2px;
         background-color: #fff;
         z-index: 999;
         border-right: 1px solid #eee;
     }
     div.sideLink a {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 10px 0;
         text-align: center;
+        margin: 0;
+    }
+    div.sideLink a.active {
+        border: 1px solid #eee;
+        border-right: none;
+        border-radius: 7px 0 0 7px;
+        width: 44px;
+        background-color: #fff;
+        z-index: 1999;
+        position: relative;
+    }
+    div.sideLink a:not(a:first-child).active::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        background-color: #fff;
+        position: absolute;
+        top: -8px;
+        right: 1px;
+        border-bottom-right-radius: 7px;
+        border-bottom: 1px solid #eee;
+        border-right: 1px solid #eee;
+        box-shadow: 2px 2px 0 2px #fff;
+    }
+    div.sideLink a.active::after {
+        content: '';
+        width: 7px;
+        height: 7px;
+        background-color: #fff;
+        position: absolute;
+        bottom: -8px;
+        right: 1px;
+        border-top-right-radius: 7px;
+        border-top: 1px solid #eee;
+        border-right: 1px solid #eee;
+        box-shadow: 2px -2px 0 2px #fff;
     }
     div.side {
         width: 0;
@@ -422,7 +461,7 @@ p.editPencil img {
     height: 15px;
 }
 
-/* STYLING THE PANEL SECTION OF EACH TASKS */
+/* STYLING THE PANEL SECTION OF EACH TASKS (THE TASK SECTION OF THE MIDDLE SECTION(U.I)  )*/
 label.label {
     display: inline-block;
     width: 20px;
@@ -497,8 +536,9 @@ ul li > div:nth-child(2) {
     background-size: cover;
     background-position: center;
 }
-.showMoreIcon i {
+.showMoreIcon {
     font-size: 1.5rem;
+    transition: transform 0.25s linear;
 }
 div.bodyMain {
     overflow: auto;
@@ -506,4 +546,26 @@ div.bodyMain {
 }
 .dayBody h2 {
     font-weight: 550;
+}
+.taskDescripDiv {
+    display: flex;
+    align-items: flex-start;
+}
+.disabledTaskDescrip {
+    resize: none;
+    width: 70%;
+    background-color: #fff;
+    font-size: 1.3rem;
+    border: none;
+}
+.enableTaskDescrip {
+    resize: none;
+    width: 70%;
+    border: 1px solid #000;
+    background-color: #fff;
+    font-size: 1.3rem;
+    padding: 8px 5px;
+}
+.editDescriptionBtn {
+    padding: 5px 10px;
 }
