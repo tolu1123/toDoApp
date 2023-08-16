@@ -567,5 +567,34 @@ div.bodyMain {
     padding: 8px 5px;
 }
 .editDescriptionBtn {
-    padding: 5px 10px;
+    padding: 3px 5px;
+    font-size: 1.2rem;
 }
+
+/* The extendDeadline  button functionality styling */
+.deadlineDiv {
+    width: 120px;
+    position: relative;
+}
+.extendDeadlineBtn {
+    width: inherit;
+    border: none;
+    padding: 4px 6px;
+}
+.deadlineInput {
+    width: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+.deadlineInput::-webkit-calendar-picker-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+  }

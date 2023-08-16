@@ -574,13 +574,20 @@ function createTask(element, data, ulList) {
         extraDisplay.appendChild(taskDescripDiv);
         //if i am the admin or a self user then do this.
         if(element.status === 'teamAdmin' || element.status === 'self') {
+            /*ADD AN EDIT BUTTON TO EDIT THE DESCRIPTION OF THE TASK IF ONLY ONE IS AN ADMIN OR
+             A LONE USER*/
             let editDescriptionBtn = document.createElement('button');
             editDescriptionBtn.setAttribute('class', 'editDescriptionBtn');
-            editDescriptionBtn.textContent = 'Edit description';
+            //THE CONDITIONAL THAT ENSURES THE BUTTON INSTRUCTION BASED ON USER'S SCREEN
+            if (window.innerWidth < 991) {
+                editDescriptionBtn.textContent = 'Edit';
+            } else {
+                editDescriptionBtn.textContent = 'Edit description';
+            }
             taskDescripDiv.appendChild(editDescriptionBtn);
             
             let y = 'edit';
-
+            //THIS EVENT LISTENER IS USED TO EDIT AND SAVE THE DESCRIPTION INPUTED IN
             editDescriptionBtn.addEventListener('click', () => {
                 if (y === 'edit') {
                     y = 'save';
@@ -597,12 +604,26 @@ function createTask(element, data, ulList) {
                 }
             })
 
-            //Extend Deadline
-            let exte
+            //CREATING THE DIV THAT HOUSES THE DEADLINE BUTTON AND THE INVISIBLE DATE INPUT
+            let deadlineDiv = document.createElement('div');
+            deadlineDiv.setAttribute('class', 'deadlineDiv');
+            extraDisplay.appendChild(deadlineDiv);
+            // Create Extend Deadline Button and append it to the deadlineDiv element
+            let extendDeadlineBtn = document.createElement('button');
+            //Setting the textContent, set the class of the deadline Button and append it.
+            extendDeadlineBtn.textContent = 'Extend deadline';
+            extendDeadlineBtn.setAttribute('class', 'extendDeadlineBtn');
+            deadlineDiv.appendChild(extendDeadlineBtn);
+            //Creating the input box
+            let deadlineInput = document.createElement('input');
+            deadlineInput.setAttribute('class', 'deadlineInput');
+            deadlineInput.type = 'date';
+            deadlineDiv.appendChild(deadlineInput);
         }
     }
 }
-
+//THIS IS THE DATE STRING FUNCTION THAT GETS THE DATE IN A SPECIFIC FORMAT(LIKE "MM/DD/YY" )
+//AND TURNS IT INTO A HUMAN READABLE TIME
 function dateString(date) {
     let year = date.slice('-4');
     let rawMonth = date.slice('0', '2');
