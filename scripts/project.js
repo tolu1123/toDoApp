@@ -90,6 +90,7 @@ function getFormData() {
             status: 'self',
             deadline: deadline.value,
             description: projectDescription.value,
+            projectMembers: [userId],
             teamMember: ['../profilePic/profile1.jpg'],
             datedSection: []
         }
@@ -123,6 +124,7 @@ function getFormData() {
             status: 'teamAdmin',
             deadline: deadline.value,
             description: projectDescription.value,
+            projectMembers: [userId, 'dramaticKoder', 'codeNinja', 'pythania', 'tasker101', 'renewedSon'],
             teamMember: ['../profilePic/profile1.jpg', '../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg'],
             datedSection: []
         }
@@ -656,11 +658,29 @@ function displayAddTaskMenu(element, elementId) {
 
     
     if(element.status === 'self') {
-        addAssignee.value = 'self';
+        //Loop through the member list of the project and 
+        //create a select element that can be used to pick the assignee to the task.
+        element.members.forEach((member, memberId) => {
+            let optionElement = document.createElement('option');
+            if (member === userId) {
+                optionElement.selected = true;
+            }
+            optionElement.textContent = member;
+            addAssignee.appendChild(optionElement);
+        })
         addAssignee.disabled = true;
     }
     if(element.status === 'teamAdmin') {
-        addAssignee.value = 'self';
+        //Loop through the member list of the project and 
+        //create a select element that can be used to pick the assignee to the task.
+        element.members.forEach((member, memberId) => {
+            let optionElement = document.createElement('option');
+            if (member === userId) {
+                optionElement.selected = true;
+            }
+            optionElement.textContent = member;
+            addAssignee.appendChild(optionElement);
+        })
         addAssignee.disabled = false;
     }
     let date = new Date();
@@ -693,6 +713,7 @@ addTaskForm.addEventListener('submit', (e) => {
         let formerTime = lastDate.getTime();
 
         //IF THERE WAS A SAVED DATA IN TODAY'S PRESENT DATE.
+        //meaning if today's task list has an entry..
         if(presentTime === formerTime) {
             let task = {
                 title: taskTitle.value.trim(),
@@ -708,7 +729,7 @@ addTaskForm.addEventListener('submit', (e) => {
 
                     return `${month}/${day}/${year}`;
                 },
-                assignee: [`${addAssignee.value}`],
+                assignee: [userId],
                 assignorPic: '../profilePic/profile1.jpg',
                 profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
             }
@@ -730,6 +751,7 @@ addTaskForm.addEventListener('submit', (e) => {
 
         //PUT TASK IN A NEW SECTION IF THE DATEDSECTION IS EMPTY 
         // OR THE LAST sAVED TASK'S DATE IS NOT EKUALS TO TODAY'S DATE
+        //either way what it means is if there has been no entries today.
         if(element.datedSection.length === 0 || presentTime !== formerTime) {
             let taskSection = {
                 dateRefiner: function () {
@@ -766,7 +788,7 @@ addTaskForm.addEventListener('submit', (e) => {
 
                         return `${month}/${day}/${year}`;
                     },
-                    assignee: [`${addAssignee.value.trim()}`],
+                    assignee: [userId, 'dramaticKoder', 'codeNinja', 'pythania', 'tasker101', 'renewedSon'],
                     assignorPic: '../profilePic/profile1.jpg',
                     profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
                 }]
@@ -994,7 +1016,7 @@ function markSelectedPanel(elementSpace) {
         }
     })
 }
-
+unaccountedFor = false;
 //THE RESIXE EVENT LISTENER TO RESIXE THE WINDOW WHEN IT IS MOBILE VIEW OR DESKTOP VIEW=>
 //Resize the side bar or close it based on the screen size
 window.addEventListener('resize', () => {
@@ -1002,12 +1024,12 @@ window.addEventListener('resize', () => {
         side.style.width = 'inherit';
         closeSideBtn.style.display = 'none';
     }else if(window.innerWidth < 991 && unaccountedFor !== true){
-        side.style.left = '-250px';
+        side.style.left = '-255px';
         side.style.width = '0';
         unaccountedFor = !unaccountedFor;
     }
 });
-//But if the input search button does receive focus do not close the side bar
+//But if the input search button does receive focus do not close the side bar(it was an unintended bug that was fixed)
 search.addEventListener('focus', () => {
     //Setting the variable for the close functionality.
     let unaccountedFor = true;
