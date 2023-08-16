@@ -13,6 +13,9 @@ let mainUI = document.querySelector('.container')
 let editProjectBox = document.querySelector('.editProjectMenu');
 let closeEditProjectBox = document.querySelector('.closeEditProject');
 
+//The search input box variable
+let search = document.querySelector('#search');
+
 //EVENT LISTENER TO SHOW SIDE BAR FOR MOBILE VIEW
 projectBtn.addEventListener('click', sideBarFun);
 
@@ -491,6 +494,7 @@ function createTask(element, data, ulList) {
         profileDivBtn.setAttribute('class', 'profileDivBtn');
         taskPane.appendChild(profileDivBtn);
 
+        //ADDING THE FUNCTIONALITY FOR THE ASSIGNEE'S PROFILE PIC THAT APPEARS NEXT TO THE TASK
         //IF THE PROJECT IS A SELF PROJECT
         if (element.status === 'self') {
             const assigneeProfilePic = document.createElement('div');
@@ -528,6 +532,7 @@ function createTask(element, data, ulList) {
                 task.assignee.forEach((eachPic, index) => {
                     const assigneeProfilePic = document.createElement('div');
                     assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
+                    //The line below is a simple trick used to assign profile picture
                     assigneeProfilePic.style.backgroundImage = `url(${task.profilePic[index % 3]})`;
                     assigneeProfilePic.style.transform = `translate(${index * 10}px)`;
                     profileDivBtn.appendChild(assigneeProfilePic);
@@ -619,7 +624,7 @@ function createTask(element, data, ulList) {
             deadlineInput.setAttribute('class', 'deadlineInput');
             deadlineInput.type = 'date';
             deadlineDiv.appendChild(deadlineInput);
-        }
+        } 
     }
 }
 //THIS IS THE DATE STRING FUNCTION THAT GETS THE DATE IN A SPECIFIC FORMAT(LIKE "MM/DD/YY" )
@@ -990,14 +995,21 @@ function markSelectedPanel(elementSpace) {
     })
 }
 
-//THE RESIXE EVENT LISTENER TO RESIXE THE WINDOW WHEN IT IS MOBILE VIEW OR DESKTOP VIEW
+//THE RESIXE EVENT LISTENER TO RESIXE THE WINDOW WHEN IT IS MOBILE VIEW OR DESKTOP VIEW=>
+//Resize the side bar or close it based on the screen size
 window.addEventListener('resize', () => {
     if(window.innerWidth > 991){
         side.style.width = 'inherit';
         closeSideBtn.style.display = 'none';
-    }else if(window.innerWidth < 991){
+    }else if(window.innerWidth < 991 && unaccountedFor !== true){
         side.style.left = '-250px';
         side.style.width = '0';
+        unaccountedFor = !unaccountedFor;
     }
 });
+//But if the input search button does receive focus do not close the side bar
+search.addEventListener('focus', () => {
+    //Setting the variable for the close functionality.
+    let unaccountedFor = true;
+})
  

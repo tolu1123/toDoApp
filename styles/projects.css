@@ -191,7 +191,7 @@ div.file div.title h2 {
         border-top-right-radius: 7px;
         border-top: 1px solid #eee;
         border-right: 1px solid #eee;
-        box-shadow: 2px -2px 0 2px #fff;
+        box-shadow: 2px -2px 0 0.5px #fff;
     }
     div.side {
         width: 0;
