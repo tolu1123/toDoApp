@@ -660,7 +660,7 @@ function displayAddTaskMenu(element, elementId) {
     if(element.status === 'self') {
         //Loop through the member list of the project and 
         //create a select element that can be used to pick the assignee to the task.
-        element.members.forEach((member, memberId) => {
+        element.projectMembers.forEach((member, memberId) => {
             let optionElement = document.createElement('option');
             if (member === userId) {
                 optionElement.selected = true;
@@ -673,7 +673,7 @@ function displayAddTaskMenu(element, elementId) {
     if(element.status === 'teamAdmin') {
         //Loop through the member list of the project and 
         //create a select element that can be used to pick the assignee to the task.
-        element.members.forEach((member, memberId) => {
+        element.projectMembers.forEach((member, memberId) => {
             let optionElement = document.createElement('option');
             if (member === userId) {
                 optionElement.selected = true;
@@ -729,7 +729,7 @@ addTaskForm.addEventListener('submit', (e) => {
 
                     return `${month}/${day}/${year}`;
                 },
-                assignee: [userId],
+                assignee: [addAssignee.value],
                 assignorPic: '../profilePic/profile1.jpg',
                 profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
             }
@@ -788,7 +788,7 @@ addTaskForm.addEventListener('submit', (e) => {
 
                         return `${month}/${day}/${year}`;
                     },
-                    assignee: [userId, 'dramaticKoder', 'codeNinja', 'pythania', 'tasker101', 'renewedSon'],
+                    assignee: [addAssignee.value],
                     assignorPic: '../profilePic/profile1.jpg',
                     profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
                 }]
