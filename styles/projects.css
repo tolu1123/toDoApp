@@ -575,6 +575,7 @@ div.bodyMain {
 .deadlineDiv {
     width: 120px;
     position: relative;
+    margin: 0 0 20px;
 }
 .extendDeadlineBtn {
     width: inherit;

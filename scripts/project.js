@@ -109,7 +109,7 @@ function getFormData() {
         //Loop through the project Array
         projectDisplay.textContent = '';
         loopThrough()
-        //if the width of the browser is less than 991px
+        //if the width of the browser is less than 991px we want to close the sideBar automatically.
         if (window.innerWidth < 991){
             closeSideBarFun();
         }
@@ -408,7 +408,7 @@ function bodyMainUI(element, elementId) {
 }
 //CREATE TASK LIST
 function createTask(element, data, ulList) {
-    //FOR EACH TASK CREATE A PANE THAT DISPLAYS THE TASK IN THE U.I
+    //FOR EACH TASK In the datedSECTION CREATE A PANE THAT DISPLAYS THE TASK IN THE U.I
     data.task.forEach((task, taskNo) => {
         createTaskList(element, ulList, task, taskNo);
     })
@@ -506,13 +506,13 @@ function createTask(element, data, ulList) {
 
         } else {
             //IF IT IS A TEAM PROJECT
-            if(task.assignee.indexOf('self') !== -1 && task.assignee.length === 1) {
+            if(task.assignee.indexOf(userId) !== -1 && task.assignee.length === 1) {
                 //IF THE TASKS'S ASSIGNEE IS ONLY THE TEAM ADMIN-PUT THE PROFILEPIC OF THE ADMIN
                 const assigneeProfilePic = document.createElement('div');
                 assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
                 assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
                 profileDivBtn.appendChild(assigneeProfilePic);
-            } else if (task.assignee.indexOf('self') !== -1 && task.assignee.length > 1) {
+            } else if (task.assignee.indexOf(userId) !== -1 && task.assignee.length > 1) {
                 //IF THE TASK'S ASSIGNEE CONTAINS TEAM ADMIN AND OTHERS
                 task.assignee.forEach((eachPic, index) => {
                     if(eachPic === 'self') {
@@ -529,7 +529,7 @@ function createTask(element, data, ulList) {
                         profileDivBtn.appendChild(assigneeProfilePic);
                     }
                 })
-            } else if (task.assignee.indexOf('self') === -1) {
+            } else if (task.assignee.indexOf(userId) === -1) {
                 //IF THE TASK'S ASSIGNEE DOES NOT CONTAIN THE TEAMADMIN
                 task.assignee.forEach((eachPic, index) => {
                     const assigneeProfilePic = document.createElement('div');
@@ -626,7 +626,31 @@ function createTask(element, data, ulList) {
             deadlineInput.setAttribute('class', 'deadlineInput');
             deadlineInput.type = 'date';
             deadlineDiv.appendChild(deadlineInput);
-        } 
+            setMinimumDate(deadlineInput);
+
+        }
+        
+        //if i am the admin i have the privledge of adding assignee to a task or removing an assignee
+        if(element.status === 'teamAdmin') {
+            //CREATING THE ADD MORE ASSIGNEE OR REMOVE ASSIGNEE FUNCTIONALITY
+            //**create the box that will house the input that collects the name to be added
+            let addRemoveBox = document.createElement('div');
+            add
+            extraDisplay.appendChild(addRemoveBox);
+            //Get the names of the assignee that can be added.(means the name of the task assignee cannot be added again unless removed)
+            let assigneeList = element.projectMembers;
+            assigneeList.forEach((assignee) => {
+                if(task.assignee.indexOf(assignee) !== -1) {
+                    assigneeList.splice(assignee, 1);
+                }
+            })
+            console.log(assigneeList);
+            //Create the input for taking down names.AND put it inside the parent 'addRemoveBox'
+            let inputAssignee = document.createElement('input');
+            addRemoveBox.appendChild(inputAssignee);
+
+
+        }
     }
 }
 //THIS IS THE DATE STRING FUNCTION THAT GETS THE DATE IN A SPECIFIC FORMAT(LIKE "MM/DD/YY" )
@@ -658,6 +682,8 @@ function displayAddTaskMenu(element, elementId) {
 
     
     if(element.status === 'self') {
+        //Clear the contents of the select element before adding option elements
+        addAssignee.innerHTML = '';
         //Loop through the member list of the project and 
         //create a select element that can be used to pick the assignee to the task.
         element.projectMembers.forEach((member, memberId) => {
@@ -671,6 +697,8 @@ function displayAddTaskMenu(element, elementId) {
         addAssignee.disabled = true;
     }
     if(element.status === 'teamAdmin') {
+        //Clear the contents of the select element before adding option elements
+        addAssignee.innerHTML = '';
         //Loop through the member list of the project and 
         //create a select element that can be used to pick the assignee to the task.
         element.projectMembers.forEach((member, memberId) => {
@@ -683,6 +711,10 @@ function displayAddTaskMenu(element, elementId) {
         })
         addAssignee.disabled = false;
     }
+    setMinimumDate(taskDeadline);
+}
+//Automatically set minimum acceptable date
+function setMinimumDate(taskDeadline) {
     let date = new Date();
     let [day, month, year] = [
         String(date.getDate()).padStart(2, '0'),
@@ -948,6 +980,7 @@ function saveEditedData() {
             status: 'self',
             deadline: editDeadline.value,
             description: editDescription.value,
+            projectMembers: [userId],
             teamMember: ['../profilePic/profile1.jpg'],
             datedSection: project[elementSpace].datedSection
         }
@@ -981,6 +1014,7 @@ function saveEditedData() {
             status: 'teamAdmin',
             deadline: editDeadline.value,
             description: editDescription.value,
+            projectMembers: [userId, 'dramaticKoder', 'codeNinja', 'pythania', 'tasker101', 'renewedSon'],
             teamMember: ['../profilePic/profile1.jpg', '../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg'],
             datedSection: project[elementSpace].datedSection
         }
