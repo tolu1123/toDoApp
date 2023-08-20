@@ -608,7 +608,12 @@ function createTask(element, data, ulList) {
                     task.description = taskDescriptionContent.value;
                     taskDescriptionContent.disabled = true;
                     taskDescriptionContent.setAttribute('class', 'disabledTaskDescrip');
-                    editDescriptionBtn.textContent = 'Edit description';
+                    //THE CONDITIONAL THAT ENSURES THE BUTTON'S TEXTCONTENT BASED ON USER'S SCREEN
+                    if (window.innerWidth < 991) {
+                        editDescriptionBtn.textContent = 'Edit';
+                    } else {
+                        editDescriptionBtn.textContent = 'Edit description';
+                    }
                     textDescrip.textContent = task.description;
                 }
             })
@@ -635,11 +640,30 @@ function createTask(element, data, ulList) {
         //if i am the admin i have the privledge of adding assignee to a task or removing an assignee
         if(element.status === 'teamAdmin') {
             //CREATING THE ADD MORE ASSIGNEE OR REMOVE ASSIGNEE FUNCTIONALITY
+
+            //Creating the box that generally houses the add more assignee functionality
+            let addAssigneeBox = document.createElement('div');
+            addAssigneeBox.setAttribute('class', 'addAssigneeBox');
+            extraDisplay.appendChild(addAssigneeBox);
+
+            //The label for the inputAssignee(element) input
+            let inputAssigneeLabel = document.createElement('label');
+            inputAssigneeLabel.setAttribute('class', 'inputAssigneeLabel')
+            inputAssigneeLabel.setAttribute('for', 'inputAssignee')
+            inputAssigneeLabel.textContent = 'Add assignee:';
+            addAssigneeBox.appendChild(inputAssigneeLabel);
+
             //**create the box that will house the input that collects the name to be added
+            //and will also also house the suggestionList
             let addRemoveBox = document.createElement('div');
-            addRemoveBox.setAttribute('class', addRemoveBox);
-            extraDisplay.appendChild(addRemoveBox);
-            addRemoveBox.innerHTML = project;
+            addRemoveBox.setAttribute('class', 'addRemoveBox');
+            addAssigneeBox.appendChild(addRemoveBox);
+
+            //create the button to save the added Assignee
+            let saveAssignee = document.createElement('button');
+            saveAssignee.textContent = 'Add';
+            addAssigneeBox.appendChild(saveAssignee);
+
             //Get the names of the assignee that can be added.(means the name of the task assignee cannot be added again unless removed)
             let assigneeList = element.projectMembers;
             assigneeList.forEach((assignee) => {
@@ -647,21 +671,37 @@ function createTask(element, data, ulList) {
                     assigneeList.splice(assignee, 1);
                 }
             })
-            console.log(assigneeList);
+
             //Create the input for taking down names.AND put it inside the parent 'addRemoveBox'
             let inputAssignee = document.createElement('input');
             addRemoveBox.appendChild(inputAssignee);
-            inputAssignee.setAttribute('class', inputAssignee);
+            inputAssignee.setAttribute('class', 'inputAssignee');
+            inputAssignee.setAttribute('id', 'inputAssignee')
             //Display the suggestion list based on if the value in the inputAssignee is also inside the available assigneeList
+            //Create the suggestion list
+            let assigneeSuggestion = document.createElement('ul');
+            assigneeSuggestion.setAttribute('class', 'assigneeSuggestion');
+            addRemoveBox.appendChild(assigneeSuggestion);
             inputAssignee.addEventListener('input', () => {
-                //Create the suggestion list
-                let assigneeSuggestion = document.createElement('ul');
-                assigneeList.forEach((assignee) => {
-                    if(assignee.toLowerCase().startsWith(inputAssignee.value)) {
-                         let 
+                if(inputAssignee.value !== '') {
+                    assigneeList.forEach((assignee) => {
+                        if(assignee.toLowerCase().startsWith(inputAssignee.value)) {
+                            assigneeSuggestion.innerHTML = '';
+                            let list = document.createElement('li');
+                            list.setAttribute('class', 'list');
+                            assigneeSuggestion.appendChild(list);
+                            list.innerHTML = `<p>${assignee}</p> <i class="fa-solid fa-user"></i>`;
+                            console.log(assignee);
+                            assigneeSuggestion.style.display = 'block';
 
-                    }
-                })
+                            //Set the width of the of the suggestion list
+                            assigneeSuggestion.style.width = `${addRemoveBox.clientWidth}px`;
+                            console.log(`${addRemoveBox.clientWidth}px`);
+                        }
+                    })
+                } else {
+                    assigneeSuggestion.style.display = 'none';
+                }
             })
     
 
@@ -901,9 +941,6 @@ function openEditBox(element, elementId) {
 
     elementSpace = elementId;
 
-    console.log(elementId);
-    console.log(elementSpace);
-
     //FILL IN THE SAVED DATA ON THE FORM
     editName.value = element.name;
     editDescription.value = element.description;
@@ -966,9 +1003,10 @@ function closeDeleteDialogue() {
     deleteDialogueMenu.style.display = 'none';
     deleteDialogueMenu.style.opacity = '0';
 }
+//if the "yes" button of the deleteDialogueMenu is clicked, delete the present project,
+//close both the deleteDialogueMenu and the editBox  and then loopThrough() the entire project.
 yesBtn.addEventListener('click', () => {
     let deletedElement = project.splice(elementSpace, 1);
-    console.log(deletedElement);
     closeDeleteDialogue();
     closeEditBox();
     projectDisplay.innerHTML = '';

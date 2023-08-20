@@ -487,12 +487,12 @@ div.dayBody {
     padding-bottom: 15px;
     border-bottom: 1px solid #eee;
 }
-ul li div:first-child {
+ul li > div:first-child {
     display: flex;
     align-items: center;
 
 }
-ul li {
+div.dayBody > ul > li {
     margin: 10px 0;
 }
 ul li div:first-child h3 {
@@ -598,4 +598,58 @@ div.bodyMain {
     margin: 0;
     padding: 0;
     cursor: pointer;
-  }
+}
+/* The addAssignee functionality styling */
+.addAssigneeBox {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-around; */
+    align-items: flex-start;
+    gap: 0 20px;
+    flex-wrap: wrap;
+}
+.addRemoveBox {
+    width: 70%;
+    /* position: relative; */
+    display: flex;
+    flex-direction: column;
+}
+.inputAssigneeLabel {
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.addAssigneeBox > button {
+    width: 40px;
+}
+.inputAssignee, .assigneeSuggestion {
+    width: 100%;
+    padding: 5px 10px;
+}
+.inputAssignee {
+    height: 27px;
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid #aaa;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    z-index: 99;
+}
+.assigneeSuggestion{
+    display: none;
+    background-color: #f9f9f9;
+    position: absolute;
+    padding-top: 30px;
+    z-index: 6;
+    width: inherit;
+    font-size: 1.2rem;
+}
+.list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.list i {
+    color: #000;
+    font-size: 1.6rem;
+}
