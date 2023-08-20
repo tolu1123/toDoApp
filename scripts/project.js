@@ -191,6 +191,8 @@ function loopThrough() {
         addPeopleBtn.innerHTML = 'Add new people <i class="fa-solid fa-user-plus"></i>';
         projectPanel.appendChild(addPeopleBtn);
 
+        //CLEAR THE MAINUI
+        mainUI.innerHTML = '';
         //ADDING EVENTLISTENERS FOR EACH PANEL SUCH THAT WHEN CLICKED- IT WILL DISPLAY A NEW U.I
         projectPanel.addEventListener('click', () => {
             panelist(element, elementId, projectPanel);
@@ -230,9 +232,9 @@ function headingMainUI(element, elementId) {
     let headingMain = document.createElement('div');
     headingMain.setAttribute('class', 'headingMain');
 
-    
-
+    //Append the heading section to the mainUI
     mainUI.appendChild(headingMain);
+    //Append the body section to the mainUI
     mainUI.appendChild(bodyMain);
 
     //SETTING THE PROJECTNAME and APPENDING IT TO HEADINGMAIN
@@ -635,8 +637,9 @@ function createTask(element, data, ulList) {
             //CREATING THE ADD MORE ASSIGNEE OR REMOVE ASSIGNEE FUNCTIONALITY
             //**create the box that will house the input that collects the name to be added
             let addRemoveBox = document.createElement('div');
-            add
+            addRemoveBox.setAttribute('class', addRemoveBox);
             extraDisplay.appendChild(addRemoveBox);
+            addRemoveBox.innerHTML = project;
             //Get the names of the assignee that can be added.(means the name of the task assignee cannot be added again unless removed)
             let assigneeList = element.projectMembers;
             assigneeList.forEach((assignee) => {
@@ -648,6 +651,19 @@ function createTask(element, data, ulList) {
             //Create the input for taking down names.AND put it inside the parent 'addRemoveBox'
             let inputAssignee = document.createElement('input');
             addRemoveBox.appendChild(inputAssignee);
+            inputAssignee.setAttribute('class', inputAssignee);
+            //Display the suggestion list based on if the value in the inputAssignee is also inside the available assigneeList
+            inputAssignee.addEventListener('input', () => {
+                //Create the suggestion list
+                let assigneeSuggestion = document.createElement('ul');
+                assigneeList.forEach((assignee) => {
+                    if(assignee.toLowerCase().startsWith(inputAssignee.value)) {
+                         let 
+
+                    }
+                })
+            })
+    
 
 
         }
@@ -885,6 +901,9 @@ function openEditBox(element, elementId) {
 
     elementSpace = elementId;
 
+    console.log(elementId);
+    console.log(elementSpace);
+
     //FILL IN THE SAVED DATA ON THE FORM
     editName.value = element.name;
     editDescription.value = element.description;
@@ -936,24 +955,25 @@ function openEditBox(element, elementId) {
 
         deleteQuestion.innerHTML = `Are you sure you want to delete project <span>${element.name}</span>?`;    
     }
-    //FUNCTION TO CLOSE THE deleteDialogueMenu
-    closeDialogueMenu.addEventListener('click', closeDeleteDialogue)
-    function closeDeleteDialogue() {
-        deleteDialogueMenu.style.display = 'none';
-        deleteDialogueMenu.style.opacity = '0';
-    }
-    yesBtn.addEventListener('click', () => {
-        project.splice(elementId, 1);
-        closeDeleteDialogue();
-        closeEditBox();
-        projectDisplay.innerHTML = '';
-        loopThrough();
-        mainUI.innerHTML = '';
-    })
+
     noBtn.addEventListener('click', () => {
         closeDeleteDialogue();
     })
 }
+//addEventListener and FUNCTION TO CLOSE THE deleteDialogueMenu
+closeDialogueMenu.addEventListener('click', closeDeleteDialogue)
+function closeDeleteDialogue() {
+    deleteDialogueMenu.style.display = 'none';
+    deleteDialogueMenu.style.opacity = '0';
+}
+yesBtn.addEventListener('click', () => {
+    let deletedElement = project.splice(elementSpace, 1);
+    console.log(deletedElement);
+    closeDeleteDialogue();
+    closeEditBox();
+    projectDisplay.innerHTML = '';
+    loopThrough();
+})
 function closeEditBox() {
     editProjectBox.style.display = 'none';
     editProjectBox.style.opacity = '0';
