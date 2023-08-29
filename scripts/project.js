@@ -682,23 +682,40 @@ function createTask(element, data, ulList) {
             let assigneeSuggestion = document.createElement('ul');
             assigneeSuggestion.setAttribute('class', 'assigneeSuggestion');
             addRemoveBox.appendChild(assigneeSuggestion);
+            let foundSuggestions = [];
             inputAssignee.addEventListener('input', () => {
+                //clear the foundSuggestons array on input again.
+                foundSuggestions = [];
                 if(inputAssignee.value !== '') {
                     assigneeList.forEach((assignee) => {
-                        if(assignee.toLowerCase().startsWith(inputAssignee.value)) {
-                            assigneeSuggestion.innerHTML = '';
-                            let list = document.createElement('li');
-                            list.setAttribute('class', 'list');
-                            assigneeSuggestion.appendChild(list);
-                            list.innerHTML = `<p>${assignee}</p> <i class="fa-solid fa-user"></i>`;
-                            console.log(assignee);
-                            assigneeSuggestion.style.display = 'block';
-
-                            //Set the width of the of the suggestion list
-                            assigneeSuggestion.style.width = `${addRemoveBox.clientWidth}px`;
-                            console.log(`${addRemoveBox.clientWidth}px`);
+                        if(assignee.startsWith(inputAssignee.value.toLowerCase())) {
+                            //Add found names to the suggestion list
+                            foundSuggestions.push(assignee); 
+                            
+                            //If the value does not start with what is inside the assigneeList
+                        } else {
+                            assigneeSuggestion.style.display = 'none';
                         }
                     })
+                    //This conditonal block creates the suggestions list and displays it.
+                    if (foundSuggestions.length !== 0) {
+                        function createList() {
+                            assigneeSuggestion.innerHTML = '';
+                            foundSuggestions.forEach((foundName) => {
+                                let list = document.createElement('li');
+                                list.setAttribute('class', 'list');
+                                assigneeSuggestion.appendChild(list);
+                                list.innerHTML = `<p>${foundName}</p> <i class="fa-solid fa-user"></i>`;
+                                assigneeSuggestion.style.display = 'block';
+
+                                //Set the width of the of the suggestion list
+                                assigneeSuggestion.style.width = `${addRemoveBox.clientWidth}px`;
+                            })
+                        }
+
+                        createList();
+                    }
+                //If the input box is empty do not display the box
                 } else {
                     assigneeSuggestion.style.display = 'none';
                 }
