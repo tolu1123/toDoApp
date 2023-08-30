@@ -665,18 +665,18 @@ function createTask(element, data, ulList) {
             addAssigneeBox.appendChild(saveAssignee);
 
             //Get the names of the assignee that can be added.(means the name of the task assignee cannot be added again unless removed)
-            let assigneeList = element.projectMembers;
-            assigneeList.forEach((assignee) => {
-                if(task.assignee.indexOf(assignee) !== -1) {
-                    assigneeList.splice(assignee, 1);
-                }
-            })
+            let assigneeList = [...element.projectMembers];
+            assigneeList = assigneeList.filter((assignee) => task.assignee.indexOf(assignee) === -1)
 
             //Create the input for taking down names.AND put it inside the parent 'addRemoveBox'
             let inputAssignee = document.createElement('input');
             addRemoveBox.appendChild(inputAssignee);
             inputAssignee.setAttribute('class', 'inputAssignee');
-            inputAssignee.setAttribute('id', 'inputAssignee')
+            inputAssignee.setAttribute('id', 'inputAssignee');
+            //Create the error message box that will show the suggestion error if any is found
+            let errorSuggestionBox = document.createElement('div');
+            errorSuggestionBox.setAttribute('class', 'errorSuggestionBox');
+            addRemoveBox.appendChild(errorSuggestionBox);
             //Display the suggestion list based on if the value in the inputAssignee is also inside the available assigneeList
             //Create the suggestion list
             let assigneeSuggestion = document.createElement('ul');
@@ -686,17 +686,37 @@ function createTask(element, data, ulList) {
             inputAssignee.addEventListener('input', () => {
                 //clear the foundSuggestons array on input again.
                 foundSuggestions = [];
+                //clear the contents of the errorBox
+                errorSuggestionBox.textContent = '';
                 if(inputAssignee.value !== '') {
                     assigneeList.forEach((assignee) => {
-                        if(assignee.startsWith(inputAssignee.value.toLowerCase())) {
+                        //When the input value is equals to any of the other available assignees
+                        //do this
+                        if(assignee.toLowerCase().startsWith(inputAssignee.value.toLowerCase())) {
                             //Add found names to the suggestion list
                             foundSuggestions.push(assignee); 
-                            
                             //If the value does not start with what is inside the assigneeList
                         } else {
                             assigneeSuggestion.style.display = 'none';
                         }
                     })
+
+
+                    //ERROR HANDLER FOR THE SUGGESTION LIST
+                    if(task.assignee.includes(inputAssignee.value)) {
+                        errorSuggestionBox.textContent = 'You cannot add an already assigned assignee to the same task.';
+                        errorSuggestionBox.style.display = 'block';
+                        return;
+                    } 
+                    
+                    assigneeList.forEach((assignee) => {
+                          //If the value does not start with what any of the projectMember inside 
+                          //the assigneeList--- The value is not a projectMember
+                        if (!(assignee.toLowerCase().startsWith(inputAssignee.value.toLowerCase()))){
+                            errorSuggestionBox.textContent = `"${inputAssignee.value.trim()}" is not a Project member.`;
+                            errorSuggestionBox.style.display = 'block';
+                        }
+                    });
                     //This conditonal block creates the suggestions list and displays it.
                     if (foundSuggestions.length !== 0) {
                         function createList() {
@@ -707,10 +727,18 @@ function createTask(element, data, ulList) {
                                 assigneeSuggestion.appendChild(list);
                                 list.innerHTML = `<p>${foundName}</p> <i class="fa-solid fa-user"></i>`;
                                 assigneeSuggestion.style.display = 'block';
+                                //Add an eventListener such that when a list is clicked, the input gets 
+                                //the value of the list that was clicked
+                                list.addEventListener('click', () => {
+                                    inputAssignee.value = foundName;
+                                    assigneeSuggestion.style.display = 'none';
+                                })
 
                                 //Set the width of the of the suggestion list
                                 assigneeSuggestion.style.width = `${addRemoveBox.clientWidth}px`;
+
                             })
+                            errorSuggestionBox.style.display = 'none';
                         }
 
                         createList();
@@ -718,6 +746,14 @@ function createTask(element, data, ulList) {
                 //If the input box is empty do not display the box
                 } else {
                     assigneeSuggestion.style.display = 'none';
+                    errorSuggestionBox.style.display = 'none';
+                }
+            })
+
+            //Add an eventListener such that when the saveAssginee button is clicked
+            saveAssignee.addEventListener('click', () => {
+                if(task.assignee.includes(inputAssignee.value) || !(assignee.toLowerCase().startsWith(inputAssignee.value.toLowerCase())) ){
+
                 }
             })
     
@@ -845,7 +881,7 @@ addTaskForm.addEventListener('submit', (e) => {
             //CLEAR THE INPUTS
             taskTitle.value = '';
             taskDescription.value = '';
-            addAssignee.value = '';
+            // addAssignee.value = '';
             taskDeadline.value = '';
 
             //CLOSE THE ADD TASK MENU IMMEDIATELY AFTER THE SUBMIT BUTTON IS CLICKED
@@ -904,7 +940,7 @@ addTaskForm.addEventListener('submit', (e) => {
             //CLEAR THE INPUTS
             taskTitle.value = '';
             taskDescription.value = '';
-            addAssignee.value = '';
+            // addAssignee.value = '';
             taskDeadline.value = '';
 
             //CLOSE THE ADD TASK MENU IMMEDIATELY AFTER THE SUBMIT BUTTON IS CLICKED
