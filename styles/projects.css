@@ -518,8 +518,9 @@ ul li div:first-child p {
 }
 ul li > div:nth-child(2) {
     width: 100%;
+    background-color: #f1f1f1;
 }
-.profileDivBtn {
+.profileShowBtnElement {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -528,6 +529,11 @@ ul li > div:nth-child(2) {
     width: calc(32% - 35px);
     height: 30px;
 }
+.profileEle {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
 .assigneeProfilePic {
     width: 20px;
     height: 20px;
@@ -535,6 +541,7 @@ ul li > div:nth-child(2) {
     border-radius: 50%;
     background-size: cover;
     background-position: center;
+    border: 1.5px solid #fff;
 }
 .showMoreIcon {
     font-size: 1.5rem;
@@ -550,6 +557,8 @@ div.bodyMain {
 .taskDescripDiv {
     display: flex;
     align-items: flex-start;
+    gap: 0 20px;
+    margin: 10px 0 0;
 }
 .disabledTaskDescrip {
     resize: none;
@@ -575,11 +584,11 @@ div.bodyMain {
 .deadlineDiv {
     width: 120px;
     position: relative;
-    margin: 0 0 20px;
+    margin: 10px 0 10px;
 }
 .extendDeadlineBtn {
     width: inherit;
-    border: none;
+    border: 1px solid #000;
     padding: 4px 6px;
 }
 .deadlineInput {
@@ -628,11 +637,11 @@ div.bodyMain {
     padding: 5px 10px;
 }
 .inputAssignee {
-    height: 27px;
+    height: 23px;
     border-radius: 5px 5px 5px 5px;
     border: 1px solid #aaa;
     font-size: 1.3rem;
-    line-height: 1.5rem;
+    line-height: 1.3rem;
     z-index: 99;
 }
 .assigneeSuggestion{
@@ -660,4 +669,25 @@ div.bodyMain {
     border-radius: 4px;
     padding: 5px 10px;
     font-size: 1.1rem;
+}
+/* The Assignee List */
+.listOfAssignee {
+    margin: 10px 0 0;
+}
+.listOfAssignee h4 {
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+.listOfAssignee li {
+    list-style-type: decimal;
+    list-style-position: outside;
+    margin: 0 10px;
+    font-size: 1.15rem;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #fff;
+    padding: 3px 0;
+}
+.listOfAssignee li:last-child {
+    border-bottom: 1px solid #fff;
 }

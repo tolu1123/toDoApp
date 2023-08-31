@@ -494,9 +494,12 @@ function createTask(element, data, ulList) {
             textDescrip.style.textDecoration = 'none';
         }
 
-        let profileDivBtn = document.createElement('div');
-        profileDivBtn.setAttribute('class', 'profileDivBtn');
-        taskPane.appendChild(profileDivBtn);
+        let profileShowBtnElement = document.createElement('div');
+        profileShowBtnElement.setAttribute('class', 'profileShowBtnElement');
+        taskPane.appendChild(profileShowBtnElement);
+        let profileEle = document.createElement('div');
+        profileEle.setAttribute('class', 'profileEle');
+        profileShowBtnElement.appendChild(profileEle);
 
         //ADDING THE FUNCTIONALITY FOR THE ASSIGNEE'S PROFILE PIC THAT APPEARS NEXT TO THE TASK
         //IF THE PROJECT IS A SELF PROJECT
@@ -504,7 +507,7 @@ function createTask(element, data, ulList) {
             const assigneeProfilePic = document.createElement('div');
             assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
             assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
-            profileDivBtn.appendChild(assigneeProfilePic);
+            profileEle.appendChild(assigneeProfilePic);
 
         } else {
             //IF IT IS A TEAM PROJECT
@@ -513,7 +516,7 @@ function createTask(element, data, ulList) {
                 const assigneeProfilePic = document.createElement('div');
                 assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
                 assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
-                profileDivBtn.appendChild(assigneeProfilePic);
+                profileEle.appendChild(assigneeProfilePic);
             } else if (task.assignee.indexOf(userId) !== -1 && task.assignee.length > 1) {
                 //IF THE TASK'S ASSIGNEE CONTAINS TEAM ADMIN AND OTHERS
                 task.assignee.forEach((eachPic, index) => {
@@ -521,14 +524,14 @@ function createTask(element, data, ulList) {
                         const assigneeProfilePic = document.createElement('div');
                         assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
                         assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
-                        assigneeProfilePic.style.transform = `translate(${index * 10}px)`;
-                        profileDivBtn.appendChild(assigneeProfilePic);
+                        assigneeProfilePic.style.transform = `translate(${index * -10}px)`;
+                        profileEle.appendChild(assigneeProfilePic);
                     } else {
                         const assigneeProfilePic = document.createElement('div');
                         assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
                         assigneeProfilePic.style.backgroundImage = `url(${task.profilePic[index % 3]})`;
-                        assigneeProfilePic.style.transform = `translate(${index * 10}px)`;
-                        profileDivBtn.appendChild(assigneeProfilePic);
+                        assigneeProfilePic.style.transform = `translate(${index * -10}px)`;
+                        profileEle.appendChild(assigneeProfilePic);
                     }
                 })
             } else if (task.assignee.indexOf(userId) === -1) {
@@ -538,8 +541,8 @@ function createTask(element, data, ulList) {
                     assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
                     //The line below is a simple trick used to assign profile picture
                     assigneeProfilePic.style.backgroundImage = `url(${task.profilePic[index % 3]})`;
-                    assigneeProfilePic.style.transform = `translate(${index * 10}px)`;
-                    profileDivBtn.appendChild(assigneeProfilePic);
+                    assigneeProfilePic.style.transform = `translate(${index * -10}px)`;
+                    profileEle.appendChild(assigneeProfilePic);
                 })
             }
         }
@@ -547,7 +550,7 @@ function createTask(element, data, ulList) {
         let showMoreIcon = document.createElement('div');
         showMoreIcon.setAttribute('class', 'showMoreIcon');
         showMoreIcon.innerHTML = '<i class="fa-sharp fa-regular fa-angle-down"></i>';
-        profileDivBtn.appendChild(showMoreIcon);
+        profileShowBtnElement.appendChild(showMoreIcon);
 
         //THE ADDEVENT LISTENER TO DISPLAY THE EXTRA DISPLAY.
         showMoreIcon.addEventListener('click', () => {
@@ -637,6 +640,14 @@ function createTask(element, data, ulList) {
 
         }
         
+        
+        let assigneeList = [...element.projectMembers];
+
+        function filterAssignee() {
+        //Get the names of the assignee that can be added.(means the name of the task assignee cannot be added again unless removed)
+        assigneeList = assigneeList.filter((assignee) => task.assignee.indexOf(assignee) === -1)
+        }
+
         //if i am the admin i have the privledge of adding assignee to a task or removing an assignee
         if(element.status === 'teamAdmin') {
             //CREATING THE ADD MORE ASSIGNEE OR REMOVE ASSIGNEE FUNCTIONALITY
@@ -664,9 +675,8 @@ function createTask(element, data, ulList) {
             saveAssignee.textContent = 'Add';
             addAssigneeBox.appendChild(saveAssignee);
 
-            //Get the names of the assignee that can be added.(means the name of the task assignee cannot be added again unless removed)
-            let assigneeList = [...element.projectMembers];
-            assigneeList = assigneeList.filter((assignee) => task.assignee.indexOf(assignee) === -1)
+            //Get the available assignees
+            filterAssignee();
 
             //Create the input for taking down names.AND put it inside the parent 'addRemoveBox'
             let inputAssignee = document.createElement('input');
@@ -683,9 +693,18 @@ function createTask(element, data, ulList) {
             assigneeSuggestion.setAttribute('class', 'assigneeSuggestion');
             addRemoveBox.appendChild(assigneeSuggestion);
             let foundSuggestions = [];
-            inputAssignee.addEventListener('input', () => {
+
+            //Flag for the error suggeston
+            let alreadyAnAssignee = false;
+            
+            inputAssignee.addEventListener('input', addMoreAssignee);
+            function addMoreAssignee() {
                 //clear the foundSuggestons array on input again.
                 foundSuggestions = [];
+                
+                //clear the flag
+                alreadyAnAssignee = false;
+
                 //clear the contents of the errorBox
                 errorSuggestionBox.textContent = '';
                 if(inputAssignee.value !== '') {
@@ -706,9 +725,10 @@ function createTask(element, data, ulList) {
                     if(task.assignee.includes(inputAssignee.value)) {
                         errorSuggestionBox.textContent = 'You cannot add an already assigned assignee to the same task.';
                         errorSuggestionBox.style.display = 'block';
+                        alreadyAnAssignee = true;
                         return;
                     } 
-                    
+
                     assigneeList.forEach((assignee) => {
                           //If the value does not start with what any of the projectMember inside 
                           //the assigneeList--- The value is not a projectMember
@@ -731,6 +751,7 @@ function createTask(element, data, ulList) {
                                 //the value of the list that was clicked
                                 list.addEventListener('click', () => {
                                     inputAssignee.value = foundName;
+                                    addMoreAssignee();
                                     assigneeSuggestion.style.display = 'none';
                                 })
 
@@ -748,18 +769,69 @@ function createTask(element, data, ulList) {
                     assigneeSuggestion.style.display = 'none';
                     errorSuggestionBox.style.display = 'none';
                 }
-            })
-
+            }
             //Add an eventListener such that when the saveAssginee button is clicked
             saveAssignee.addEventListener('click', () => {
-                if(task.assignee.includes(inputAssignee.value) || !(assignee.toLowerCase().startsWith(inputAssignee.value.toLowerCase())) ){
-
+                if(alreadyAnAssignee){
+                
+                }else if(assigneeList.includes(inputAssignee.value.trim()) && (!task.assignee.includes(inputAssignee.value.trim()))) {
+                    //If the value exists in any of the available assignee and is not already an assignee
+                    task.assignee.push(inputAssignee.value.trim());
+                    filterAssignee();
+                    inputAssignee.value = '';
+                    createAssigneeList();
                 }
             })
     
 
 
         }
+        //Create the Parent Element the houses the List of Assignees
+        let listOfAssignee = document.createElement('div');
+        listOfAssignee.setAttribute('class', 'listOfAssignee');
+        extraDisplay.appendChild(listOfAssignee);
+
+        function createAssigneeList() {
+            //If i am the admin i will be able to remove an assignee from the task
+            //But if i am the team member all  will be able to see is the list of Assignee
+            if(element.status === 'teamAdmin' || element.status === 'teamMember') {
+                let listOfAssignee = document.querySelector('.listOfAssignee');
+                listOfAssignee.innerHTML = '';
+                
+                let listTitle = document.createElement('h4');
+                listTitle.textContent = 'List of Task Assignees:';
+                listOfAssignee.appendChild(listTitle);
+
+                let list = document.createElement('ol');
+                listOfAssignee.appendChild(list);
+                task.assignee.forEach((assignee) => {
+                    let li = document.createElement('li');
+                    list.appendChild(li);
+
+                    let para = document.createElement('p');
+                    li.appendChild(para);
+                    para.textContent = `${assignee}`;
+
+                    if(element.status === 'teamAdmin' && task.assignee.length > 1){
+                        let removeAssigneeBtn = document.createElement('button');
+                        removeAssigneeBtn.textContent = 'Remove';
+                        li.appendChild(removeAssigneeBtn);
+
+                        removeAssigneeBtn.addEventListener('click', (e) => {
+                            list.removeChild(e.currentTarget.parentElement);
+                            task.assignee.splice(task.assignee.indexOf(assignee), 1);
+                            assigneeList.push(assignee);
+                            filterAssignee();
+                            createAssigneeList();
+                            console.log(assigneeList);
+                            console.log(task.assignee);
+                        })
+                    }
+                })
+            }
+        }
+        //Create the list of assignees
+        createAssigneeList();
     }
 }
 //THIS IS THE DATE STRING FUNCTION THAT GETS THE DATE IN A SPECIFIC FORMAT(LIKE "MM/DD/YY" )
