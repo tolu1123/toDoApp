@@ -530,9 +530,13 @@ ul li > div:nth-child(2) {
     height: 30px;
 }
 .profileEle {
+    width: calc(100% - 1.5rem);
+    height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
+    position: relative;
+
 }
 .assigneeProfilePic {
     width: 20px;
@@ -542,6 +546,8 @@ ul li > div:nth-child(2) {
     background-size: cover;
     background-position: center;
     border: 1.5px solid #fff;
+    position: absolute;
+    top: 50%;
 }
 .showMoreIcon {
     font-size: 1.5rem;
@@ -631,6 +637,7 @@ div.bodyMain {
 }
 .addAssigneeBox > button {
     width: 40px;
+    padding: 2px 5px;
 }
 .inputAssignee, .assigneeSuggestion {
     width: 100%;
@@ -685,9 +692,23 @@ div.bodyMain {
     font-size: 1.15rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border-top: 1px solid #fff;
     padding: 3px 0;
 }
 .listOfAssignee li:last-child {
     border-bottom: 1px solid #fff;
+}
+.removeAssigneeBtn {
+    padding: 2px 5px;
+}
+/* The deleteTaskButton styling */
+.deleteTaskButton {
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 500;
 }
