@@ -1168,6 +1168,7 @@ yesBtn.addEventListener('click', () => {
     closeDeleteDialogue();
     closeEditBox();
     projectDisplay.innerHTML = '';
+    mainUI.innerHTML = '';
     loopThrough();
 })
 function closeEditBox() {
