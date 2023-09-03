@@ -196,6 +196,10 @@ function loopThrough() {
         //ADDING EVENTLISTENERS FOR EACH PANEL SUCH THAT WHEN CLICKED- IT WILL DISPLAY A NEW U.I
         projectPanel.addEventListener('click', () => {
             panelist(element, elementId, projectPanel);
+            //if the width of the browser is less than 991px
+            if (window.innerWidth < 991){
+                closeSideBarFun();
+            }
         });
 
         if(project.length - 1 === elementId) { 
