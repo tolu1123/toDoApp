@@ -805,49 +805,70 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
         listOfAssignee.setAttribute('class', 'listOfAssignee');
         extraDisplay.appendChild(listOfAssignee);
 
-        if (element.status === 'teamAdmin' || element.status === 'teamMember') {
-            function createAssigneeList() {
-                //If i am the admin i will be able to remove an assignee from the task
-                //But if i am the team member all  will be able to see is the list of Assignee
-                if(element.status === 'teamAdmin' || element.status === 'teamMember') {
-                    let listOfAssignee = extraDisplay.querySelector(`.listOfAssignee`);
-                    listOfAssignee.innerHTML = '';
-                    
-                    let listTitle = document.createElement('h4');
-                    listTitle.textContent = 'List of Task Assignees:';
-                    listOfAssignee.appendChild(listTitle);
 
-                    let list = document.createElement('ol');
-                    listOfAssignee.appendChild(list);
-                    task.assignee.forEach((assignee) => {
-                        let li = document.createElement('li');
-                        list.appendChild(li);
+        function createAssigneeList() {
+            //If i am the admin i will be able to remove an assignee from the task
+            //But if i am the team member all i will be able to see is the list of Assignee
+            if(element.status === 'teamAdmin' || element.status === 'teamMember') {
+                let listOfAssignee = extraDisplay.querySelector(`.listOfAssignee`);
+                listOfAssignee.innerHTML = '';
+                
+                let listTitle = document.createElement('h4');
+                listTitle.textContent = 'List of Task Assignees:';
+                listOfAssignee.appendChild(listTitle);
 
-                        let para = document.createElement('p');
-                        li.appendChild(para);
-                        para.textContent = `${assignee}`;
+                let list = document.createElement('ol');
+                listOfAssignee.appendChild(list);
+                task.assignee.forEach((assignee) => {
+                    let li = document.createElement('li');
+                    list.appendChild(li);
 
-                        if(element.status === 'teamAdmin' && task.assignee.length > 1){
-                            let removeAssigneeBtn = document.createElement('button');
-                            removeAssigneeBtn.setAttribute('class', 'removeAssigneeBtn');
-                            removeAssigneeBtn.textContent = 'Remove';
-                            li.appendChild(removeAssigneeBtn);
+                    let para = document.createElement('p');
+                    li.appendChild(para);
+                    para.textContent = `${assignee}`;
 
-                            removeAssigneeBtn.addEventListener('click', (e) => {
-                                list.removeChild(e.currentTarget.parentElement);
-                                task.assignee.splice(task.assignee.indexOf(assignee), 1);
-                                assigneeList.push(assignee);
-                                filterAssignee();
-                                createAssigneeList();
-                                assigneePic();
-                            })
-                        }
-                    })
-                }
+                    if(element.status === 'teamAdmin' && task.assignee.length > 1){
+                        let removeAssigneeBtn = document.createElement('button');
+                        removeAssigneeBtn.setAttribute('class', 'removeAssigneeBtn');
+                        removeAssigneeBtn.textContent = 'Remove';
+                        li.appendChild(removeAssigneeBtn);
+
+                        removeAssigneeBtn.addEventListener('click', (e) => {
+                            list.removeChild(e.currentTarget.parentElement);
+                            task.assignee.splice(task.assignee.indexOf(assignee), 1);
+                            assigneeList.push(assignee);
+                            filterAssignee();
+                            createAssigneeList();
+                            assigneePic();
+                        })
+                    }
+                })
             }
-            //Create the list of assignees
-            createAssigneeList();
         }
+        //Create the list of assignees
+        createAssigneeList();
+
+        //CREATE THE "attach File" FUNCTIONALITY
+        //Create the parent Div that houses the attach file functonality
+        let attachFileDiv = document.createElement('div');
+        attachFileDiv.setAttribute('class', 'attachFileDiv');
+        extraDisplay.appendChild(attachFileDiv);
+
+        //create the input element with "TYPE" file
+        let file = document.createElement('input');
+        file.type = 'file';
+        file.style.display = 'none';
+        attachFileDiv.appendChild(file);
+
+        //Create the attach file button
+        let attachFileBtn = document.createElement('div');
+        attachFileBtn.setAttribute('class', 'attachFileBtn');
+        attachFileDiv.appendChild(attachFileBtn);
+
+        
+
+
+
 
         //CREATE THE BUTTON THAT DELETES THE TASK WHEN CLICKED
         let deleteTaskButton = document.createElement('button');
@@ -866,7 +887,9 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 //Remove the task from the datedSection
                 project[elementId].datedSection[dataId].task.splice(taskNo, 1)
             }
-        })
+        });
+
+
     }
 }
 //THIS IS THE DATE STRING FUNCTION THAT GETS THE DATE IN A SPECIFIC FORMAT(LIKE "MM/DD/YY" )
@@ -1290,3 +1313,16 @@ search.addEventListener('focus', () => {
     let unaccountedFor = true;
 })
  
+
+//Function to check if the project is empty and display a smokeScreen if empty
+function fileScreen() {
+    let fileSection = document.querySelector('.file');
+    let smokeScreen = document.querySelector('.fileSmokeScreen');
+    if(project.length === 0) {
+        smokeScreen.style.position = 'absolute';
+        smokeScreen.style.top = '0';
+        smokeScreen.style.width = fileSection.clientWidth + 'px';
+        smokeScreen.style.height = 'inherit';
+    }
+}
+fileScreen();

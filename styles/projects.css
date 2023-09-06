@@ -2,8 +2,8 @@
 body {
     width: 100vw;
     height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden;
+    /* overflow-y: hidden;
+    overflow-x: hidden; */
 }
 div.sideLink {
     display: none;
@@ -98,16 +98,6 @@ div.meetingTile {
     border-top: 0.25px solid #eee;
     background-color: #f7f7f7;
     overflow-y: auto;
-}
-/* Styling the ATTACHED FILE section */
-div.file {
-    padding: 20px 20px 0 20px;
-}
-div.file div.title h2 {
-    font-size: 1.6rem;
-    font-weight: 600;
-    line-height: 1.6rem;
-    text-transform: uppercase;
 }
 @media (min-width: 500px) and (max-width: 700px) {
     div.panel {
@@ -246,7 +236,7 @@ div.file div.title h2 {
         width: 100%;
     }
     div.aside {
-        width: 300px;
+        width: 280px;
         border-right: 0.25px solid #eee;
         height: calc(100vh - 60px);
     }
@@ -256,7 +246,7 @@ div.file div.title h2 {
         padding: 20px;
     }
     div.file {
-        width: 250px;
+        width: 270px;
         /* border: 0.25px solid #eee; */
     }
 }
@@ -445,6 +435,9 @@ div.headDiv + button {
     background-color: rgb(43, 106, 241);
     border: none;
     color: #fff;
+}
+div.container {
+    overflow: auto;
 }
 div.container h1 {
     font-size: 2.7rem;
@@ -711,4 +704,79 @@ div.bodyMain {
     color: #fff;
     font-size: 1.3rem;
     font-weight: 500;
+}
+
+/* Styling the ATTACHED FILE section */
+div.file {
+    height: calc(100vh - 60px);
+    /* padding: 0 20px 20px; */
+    overflow: auto;
+    position: relative;
+}
+div.fileHeader {
+    position: sticky;
+    top: 0;
+    padding: 20px 20px 0;
+    background-color: #fff;
+    width: 100%;
+}
+div.file div.title h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1.8rem;
+    text-transform: uppercase;
+}
+div.file div.title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0 0 10px;
+}
+div.file div.title > div.fileView {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+div.file  div.title > div.fileView > span {
+    width: 22px;
+    height: 22px;
+    font-size: 1.5rem;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.super {
+    background-color: rgb(43, 106, 241);
+}
+.color {
+    color: #fff;
+    --ionicon-stroke-width: 48px;
+}
+div.file div.fileSearch{
+    width: 100%;
+    height: 50px;
+}
+div.file div.fileSearch input {
+    height: 3.2rem;
+    padding: 0.4rem 0 0.4rem 2.6rem;
+    font-size: 1.45rem;
+    font-weight: 400;
+    letter-spacing: 0.7px;
+    background-position: 10px center;
+    background-size: 16px 16px;
+    border-radius: 3px;
+}
+div.tag {
+    padding: 1rem 0 0;
+    border-bottom: 1px solid #eee;
+}
+div.fileList {
+    width: 100%;
+    height: 1500px;
+    background-color: pink;
+    padding: 20px;
+}
+div.fileSmokeScreen {
+    background-color: #fff;
 }
