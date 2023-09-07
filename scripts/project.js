@@ -860,10 +860,23 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
         file.style.display = 'none';
         attachFileDiv.appendChild(file);
 
-        //Create the attach file button
+        //Create the element that houses the attachFileBtn and the attach file button
+        let attachFileHouse = document.createElement('div');
+        attachFileHouse.setAttribute('class', 'attachFileHouse');
+        attachFileDiv.appendChild(attachFileHouse);
+
         let attachFileBtn = document.createElement('div');
         attachFileBtn.setAttribute('class', 'attachFileBtn');
-        attachFileDiv.appendChild(attachFileBtn);
+        attachFileBtn.innerHTML = '<i class="fa-light fa-paperclip-vertical"></i>';
+        attachFileHouse.appendChild(attachFileBtn);
+
+        //also create the instruction that helps the users to understand
+        // what the attach file button is used for
+        let attachInstruction = document.createElement('span');
+        attachInstruction.setAttribute('class', 'attachInstruction');
+        attachInstruction.textContent = 'Submit file to complete Task.';
+        attachFileHouse.appendChild(attachInstruction);
+
 
         
 

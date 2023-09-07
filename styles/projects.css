@@ -695,6 +695,30 @@ div.bodyMain {
 .removeAssigneeBtn {
     padding: 2px 5px;
 }
+/* The styling for the attachFile functonality */
+.attachFileDiv {
+    margin: 15px 0 15px 10px;
+}
+.attachFileHouse {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 0 10px;
+    font-size: 1.3rem;
+}
+.attachFileBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 1px 1px 0 5px #aaa;
+    font-size: 1.5rem;
+}
 /* The deleteTaskButton styling */
 .deleteTaskButton {
     width: 100%;
