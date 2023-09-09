@@ -2,8 +2,13 @@
 body {
     width: 100vw;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
     /* overflow-y: hidden;
     overflow-x: hidden; */
+}
+main {
+    flex: 1;
 }
 div.sideLink {
     display: none;
@@ -243,7 +248,8 @@ div.meetingTile {
     div.container {
         width: calc(100vw - 550px);
         border-right: 0.25px solid #eee;
-        padding: 20px;
+        padding: 0 20px 10px;
+        height: calc(100vh - 60px);
     }
     div.file {
         width: 270px;
@@ -421,6 +427,12 @@ div.headingMain {
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 999;
+    padding-top: 20px;
 }
 div.headDiv {
     width: 70%;
@@ -548,7 +560,7 @@ ul li > div:nth-child(2) {
 }
 div.bodyMain {
     overflow: auto;
-    width: calc(inherit - 40px);
+    /* width: calc(inherit - 40px); */
 }
 .dayBody h2 {
     font-weight: 550;
@@ -697,6 +709,7 @@ div.bodyMain {
 }
 /* The styling for the attachFile functonality */
 .attachFileDiv {
+    display: none;
     margin: 15px 0 15px 10px;
 }
 .attachFileHouse {
@@ -705,7 +718,6 @@ div.bodyMain {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
-    margin: 0 0 0 10px;
     font-size: 1.3rem;
 }
 .attachFileBtn {
@@ -716,8 +728,11 @@ div.bodyMain {
     height: 30px;
     background-color: #fff;
     border-radius: 50%;
-    box-shadow: 1px 1px 0 5px #aaa;
+    box-shadow: 2px 2px 5px #aaa;
     font-size: 1.5rem;
+}
+.attachFileBtn:hover {
+    background-color: #dfdfdf;
 }
 /* The deleteTaskButton styling */
 .deleteTaskButton {

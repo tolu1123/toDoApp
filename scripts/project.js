@@ -794,6 +794,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                     inputAssignee.value = '';
                     createAssigneeList();
                     assigneePic();
+                    attachFile();
                 }
             })
     
@@ -840,6 +841,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                             filterAssignee();
                             createAssigneeList();
                             assigneePic();
+                            attachFile();
                         })
                     }
                 })
@@ -848,35 +850,58 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
         //Create the list of assignees
         createAssigneeList();
 
-        //CREATE THE "attach File" FUNCTIONALITY
-        //Create the parent Div that houses the attach file functonality
         let attachFileDiv = document.createElement('div');
         attachFileDiv.setAttribute('class', 'attachFileDiv');
         extraDisplay.appendChild(attachFileDiv);
 
-        //create the input element with "TYPE" file
-        let file = document.createElement('input');
-        file.type = 'file';
-        file.style.display = 'none';
-        attachFileDiv.appendChild(file);
+        function attachFile() {
+            //CREATE THE "attach File" FUNCTIONALITY
+            //Create the parent Div that houses the attach file functonality
+            if (task.assignee.includes(userId)) {
+                attachFileDiv.innerHTML = '';
+                attachFileDiv.style.display = 'block';
+                console.log('attiched');
+                console.log(task.assignee);
+                
 
-        //Create the element that houses the attachFileBtn and the attach file button
-        let attachFileHouse = document.createElement('div');
-        attachFileHouse.setAttribute('class', 'attachFileHouse');
-        attachFileDiv.appendChild(attachFileHouse);
+                //create the input element with "TYPE" file
+                let file = document.createElement('input');
+                file.type = 'file';
+                file.style.display = 'none';
+                attachFileDiv.appendChild(file);
 
-        let attachFileBtn = document.createElement('div');
-        attachFileBtn.setAttribute('class', 'attachFileBtn');
-        attachFileBtn.innerHTML = '<i class="fa-light fa-paperclip-vertical"></i>';
-        attachFileHouse.appendChild(attachFileBtn);
+                //Create the element that houses the attachFileBtn and the attach file button
+                let attachFileHouse = document.createElement('div');
+                attachFileHouse.setAttribute('class', 'attachFileHouse');
+                attachFileDiv.appendChild(attachFileHouse);
 
-        //also create the instruction that helps the users to understand
-        // what the attach file button is used for
-        let attachInstruction = document.createElement('span');
-        attachInstruction.setAttribute('class', 'attachInstruction');
-        attachInstruction.textContent = 'Submit file to complete Task.';
-        attachFileHouse.appendChild(attachInstruction);
+                let attachFileBtn = document.createElement('div');
+                attachFileBtn.setAttribute('class', 'attachFileBtn');
+                attachFileBtn.innerHTML = '<i class="fa-light fa-paperclip-vertical"></i>';
+                attachFileHouse.appendChild(attachFileBtn);
 
+                //also create the instruction that helps the users to understand
+                // what the attach file button is used for
+                let attachInstruction = document.createElement('span');
+                attachInstruction.setAttribute('class', 'attachInstruction');
+                attachInstruction.textContent = 'Submit file to complete Task.';
+                attachFileHouse.appendChild(attachInstruction);
+
+                //Add event listeners that adds the file to the task
+                attachFileBtn.addEventListener('click', () => {
+                    file.click();
+                });
+
+                file.addEventListener('change', () => {
+                    
+                })
+            } else {
+                //if the user is not part of the assignee to the task- do not show a place to attach file
+                attachFileDiv.innerHTML = '';
+                attachFileDiv.style.display = 'none';  
+            }
+        }
+        attachFile()
 
         
 
@@ -1029,7 +1054,6 @@ addTaskForm.addEventListener('submit', (e) => {
 
             //CLOSE THE ADD TASK MENU IMMEDIATELY AFTER THE SUBMIT BUTTON IS CLICKED
             closeAddTaskMenu();
-            console.log(element);
             bodyMainUI(element, elementId);
             return;
         }
@@ -1089,7 +1113,6 @@ addTaskForm.addEventListener('submit', (e) => {
 
             //CLOSE THE ADD TASK MENU IMMEDIATELY AFTER THE SUBMIT BUTTON IS CLICKED
             closeAddTaskMenu();
-            console.log(element);
             bodyMainUI(element, elementId);
             return;
         }
