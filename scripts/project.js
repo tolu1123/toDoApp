@@ -858,10 +858,9 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
             //CREATE THE "attach File" FUNCTIONALITY
             //Create the parent Div that houses the attach file functonality
             if (task.assignee.includes(userId)) {
+                //clear the contents of the attachFileDiv element and give it a display block
                 attachFileDiv.innerHTML = '';
                 attachFileDiv.style.display = 'block';
-                console.log('attiched');
-                console.log(task.assignee);
                 
 
                 //create the input element with "TYPE" file
