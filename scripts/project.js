@@ -652,7 +652,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
             deadlineDiv.appendChild(deadlineInput);
             setMinimumDate(deadlineInput);
             
-            //YOU HAVE NOT ADDED THE FUNCTIONALITY THAT EXTENDS THE DEADLINE
+            //the extend deadline event listener
             deadlineInput.addEventListener('change', () => {
                 task.deadline = deadlineInput.value.trim();
             })
