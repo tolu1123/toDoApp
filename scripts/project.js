@@ -92,7 +92,8 @@ function getFormData() {
             description: projectDescription.value,
             projectMembers: [userId],
             teamMember: ['../profilePic/profile1.jpg'],
-            datedSection: []
+            datedSection: [],
+            sharedFiles: []
         }
         //Push the formdata Object into the project Array
         project.push(formData);
@@ -126,7 +127,8 @@ function getFormData() {
             description: projectDescription.value,
             projectMembers: [userId, 'dramaticKoder', 'codeNinja', 'pythania', 'tasker101', 'renewedSon'],
             teamMember: ['../profilePic/profile1.jpg', '../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg'],
-            datedSection: []
+            datedSection: [],
+            sharedFiles: []
         }
         //Push the created project into the project Array
         project.push(formData);
@@ -649,7 +651,11 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
             deadlineInput.type = 'date';
             deadlineDiv.appendChild(deadlineInput);
             setMinimumDate(deadlineInput);
-
+            
+            //YOU HAVE NOT ADDED THE FUNCTIONALITY THAT EXTENDS THE DEADLINE
+            deadlineInput.addEventListener('change', () => {
+                task.deadline = deadlineInput.value.trim();
+            })
         }
         
         
@@ -1029,14 +1035,7 @@ addTaskForm.addEventListener('submit', (e) => {
                 deadline: taskDeadline.value.trim(),
                 taskStatus: 'undone',
                 taskVisible: 'closed',
-                deadlint() {
-                    let date = taskDeadline.value.trim();
-                    let year = date.slice(0, 5);
-                    let month = date.slice(6, 8);
-                    let day = date.slice(-2);
-
-                    return `${month}/${day}/${year}`;
-                },
+                submittedFile: [],
                 assignee: [addAssignee.value],
                 assignorPic: '../profilePic/profile1.jpg',
                 profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
@@ -1088,14 +1087,7 @@ addTaskForm.addEventListener('submit', (e) => {
                     deadline: taskDeadline.value.trim(),
                     taskStatus: 'undone',
                     taskVisible: 'closed',
-                    deadlint() {
-                        let date = taskDeadline.value.trim();
-                        let year = date.slice(0, 5);
-                        let month = date.slice(6, 8);
-                        let day = date.slice(-2);
-
-                        return `${month}/${day}/${year}`;
-                    },
+                    submittedFile: [],
                     assignee: [addAssignee.value],
                     assignorPic: '../profilePic/profile1.jpg',
                     profilePic: ['../profilePic/profile2.jpg', '../profilePic/profile3.jpg', '../profilePic/profile4.jpg']
