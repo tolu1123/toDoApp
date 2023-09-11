@@ -898,7 +898,12 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 });
 
                 file.addEventListener('change', () => {
-                    
+                    //create an object that contains today's date as key
+                    //and a key that contains the type of file
+                    let fileData = {
+                        file: file.files[0]
+                    }
+                    console.log(fileData.file);
                 })
             } else {
                 //if the user is not part of the assignee to the task- do not show a place to attach file
@@ -1122,7 +1127,7 @@ let rawMonth = date.slice('5', '7');
 let day = date.slice('-2');
 
 let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-let month = months[Number(rawMonth)];
+let month = months[Number(rawMonth - 1)];
 
 return `${day} ${month}, ${year}`;
 }
