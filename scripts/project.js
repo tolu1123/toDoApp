@@ -897,6 +897,29 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                     file.click();
                 });
 
+                //Get the date i added the file
+                function getDate(giveDate, giveTime) {
+                    let date = new Date();
+                    //if the giveDate arguement is provided in the function call and giveTime is not
+                    //return only the date
+                    if (giveDate && !giveTime) {
+                    let year = date.getFullYear();
+                    let rawMonth = date.getMonth();
+                    let day = date.getDate();
+
+                    let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+                    let month = months[rawMonth];
+                    return `${day} ${month}, ${year}`;
+                    }
+
+                    //if the giveTime arguement is provided in the function call and giveDate is not
+                    //return only the 'Time in AM/PM'
+                    if (!giveDate && giveTime) {
+                        let time = date.getHours();
+                        return time === 0? `12am`: time > 0 && time < 11 ? `${time}am`: time === 12? `12pm`: time > 12 ? `${time % 12}pm`: null;
+                        
+                    }
+                }
                 file.addEventListener('change', () => {
                     //create an object that contains today's date as key
                     //and a key that contains the type of file
