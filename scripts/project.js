@@ -897,7 +897,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                     file.click();
                 });
 
-                //Get the date i added the file
+                //Get the date or the time i added the file depending on the arguement provided when calling the function
                 function getDate(giveDate, giveTime) {
                     let date = new Date();
                     //if the giveDate arguement is provided in the function call and giveTime is not
@@ -909,7 +909,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
 
                     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
                     let month = months[rawMonth];
-                    return `${day} ${month}, ${year}`;
+                    return `${month} ${day}, ${year}`;
                     }
 
                     //if the giveTime arguement is provided in the function call and giveDate is not
@@ -920,13 +920,50 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         
                     }
                 }
+
+                //Function to get the file type of the file that is being shared
+                //we are going to use different method/attempts to accertain the type
+                function fileType(obj) {
+                    //attempt 1
+                    let fileName = obj.name
+                    let fileType = fileName.substring(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
+                    console.log(fileType)
+                    
+                    //if attempt 1 fails to give us a fileType proceed with attempt 2
+                    if(fileType === '') {
+                        //attempt 2
+                        let fileType2 = obj.type;
+                        let typeArr = fileType2.split('/');
+                        fileType = typeArr[1];
+
+                        ////if attempt 2 fails to give us a fileType proceed with attempt 3
+                        //which will just give us the idea of the file category
+                        
+                        if(fileType === ''){
+                            //....attempt 3
+                            let fileType2 = obj.type;
+                            let typeArr = fileType2.split('/');
+                            fileType = typeArr[0];
+                        }
+                    }
+                }
                 file.addEventListener('change', () => {
                     //create an object that contains today's date as key
                     //and a key that contains the type of file
                     let fileData = {
-                        file: file.files[0]
+                        file: file.files[0],
+                        daySubmitted: function () {
+                            getDate(true, undefined)
+                        },
+                        timeSubmitted: function () {
+                            getDate(undefined, true)
+                        },
+                        fileType: function () {
+                            let fileName = this.file;
+                            fileType(fileName);
+                        }
                     }
-                    console.log(fileData.file);
+                    console.log(fileData.fileType());
                 })
             } else {
                 //if the user is not part of the assignee to the task- do not show a place to attach file
