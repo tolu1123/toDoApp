@@ -926,25 +926,14 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 function fileType(obj) {
                     //attempt 1
                     let fileName = obj.name
-                    let fileType = fileName.substring(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
-                    console.log(fileType)
+                    let fileType = fileName.substring(((fileName.lastIndexOf('.') - 1) >>> 0) + 1);
                     
-                    //if attempt 1 fails to give us a fileType proceed with attempt 2
-                    if(fileType === '') {
-                        //attempt 2
-                        let fileType2 = obj.type;
-                        let typeArr = fileType2.split('/');
-                        fileType = typeArr[1];
-
-                        ////if attempt 2 fails to give us a fileType proceed with attempt 3
-                        //which will just give us the idea of the file category
-                        
-                        if(fileType === ''){
-                            //....attempt 3
-                            let fileType2 = obj.type;
-                            let typeArr = fileType2.split('/');
-                            fileType = typeArr[0];
-                        }
+                    //if the algorithm is able to detect an extension return the value of the extension
+                    //OR ELSE return the string 'notFound'
+                    if (fileType !== '') {
+                        return fileType;
+                    } else {
+                        return 'notFound';
                     }
                 }
                 file.addEventListener('change', () => {
@@ -952,6 +941,9 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                     //and a key that contains the type of file
                     let fileData = {
                         file: file.files[0],
+                        fileName: function() {
+                            return this.file.name;
+                        },
                         daySubmitted: function () {
                             getDate(true, undefined)
                         },
@@ -960,10 +952,88 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         },
                         fileType: function () {
                             let fileName = this.file;
-                            fileType(fileName);
+                            return fileType(fileName);
+                        },
+                        fileSize: function () {
+                            return `${this.file.size}mb`;
+                        }, 
+                        filePic: function () {
+                            //The functon that returns the icon based on the type of the extension
+                            //getExtensionPic()
+                            function getExtPic(ext) {
+                                //if ext parameter is not equals to notFound
+                                if(ext !== 'notFound') {
+                                    //The possible extensions for the type of mime possible
+                                    const fileExtensionGroup = {
+                                        video: ['.mp4', '.m4v', '.f4v', '.f4p', '.webm', '.ogv', '.ogg', '.mov', '.qt', '.avi', '.flv', '.mkv', '.wmv', '.asf', '.mpeg', '.mpg', '.mpe', '.msv', '.vfw', '.3gp', '.3gpp', '.3g2', '.3gpp2'],
+                                        audio: ['.mp3', '.wav', '.ogg', '.oga', '.aiff', '.aif', '.flac', '.midi', '.mid', '.wma', '.wax', '.ra', '.ram', '.rpm', '.amr'],
+                                        image: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp', '.svg', '.ico', '.jfif', '.pjpeg', '.pjp', '.apng', '.avif', '.heic', '.heif', '.pdf', '.eps', '.raw', '.cr2', '.nef', '.orf', '.sr2', '.arw', '.dng', '.raf', '.rw2', '.psd', '.ai', '.cdr', '.indd', '.epsf', '.epsi', '.wmf', '.emf', '.ico', '.jfif', '.pjpeg', '.pjp', '.svgz', '.sketch', '.ai', '.eps', '.pdf', '.raw', '.ico', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff', '.jfif', '.pjpeg', '.pjp', '.avif', '.heic', '.heif', '.figma'],
+                                        font: ['.otf', '.ttf', '.woff', '.woff2', '.eot', '.otf'],
+                                        text: ['.txt', '.html', '.htm', '.css', '.js', '.json', '.xml', '.md', '.markdown', '.csv', '.tsv', '.log', '.yaml', '.yml', '.ini', '.cfg', '.conf', '.bat', '.sh', '.c', '.cpp', '.h', '.java', '.py', '.php', '.rb', '.perl', '.pl', '.sql', '.ps1', '.vbs', '.xml', '.svg', '.rss', '.atom', '.jsx', '.ts', '.tsx', '.less', '.scss', '.sass', '.cs', '.as', '.htaccess', '.gitignore', '.dockerignore', '.htpasswd', '.babelrc', '.eslintrc', '.editorconfig', '.gitattributes', '.npmrc'],
+                                        application: ['.pdf', '.zip', '.rar', '.7z', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.exe', '.bin', '.apk', '.dmg', '.tar', '.gz', '.bz2', '.json', '.xml', '.yaml', '.yml', '.ini', '.cfg', '.conf', '.bat', '.sh', '.app', '.iso', '.sql']
+                                    }
+
+                                    //Get the key of the extension Found
+                                    function getKey(ext) {
+                                        //loop through the key and its values and return the key
+                                        for(const [key, value] of Object.entries(fileExtensionGroup)) {
+                                            if(value.includes(ext)) {
+                                                return key;
+                                            }
+                                        }
+                                        return 'notFound';
+                                    }
+
+                                    //get the extensions key from the getKey()
+                                    let key = getKey(ext);
+                                    // return key;
+                                    //The conditional that returns the appropriate icon for the extension that has been provided in the parameter of the getExtPic()
+                                    switch(key) {
+                                        case 'video':
+                                        return '<i class="fa-sharp fa-light fa-circle-video"></i>';
+                                        break;
+
+                                        case 'audio':
+                                        return '<i class="fa-sharp fa-light fa-circle-microphone"></i>';
+                                        break;
+                                            
+                                        case 'image':
+                                        return '<i class="fa-light fa-image"></i>';
+                                        break;
+
+                                        case 'font':
+                                        return '<i class="fa-sharp fa-light fa-font-case"></i>';
+                                        break;
+
+                                        case 'text':
+                                        return '<i class="fa-sharp fa-light fa-file-lines"></i>';
+                                        break;
+
+                                        case 'application':
+                                        return '<i class="fa-brands fa-android"></i>';
+                                        break;
+
+
+                                        default:
+                                        return '<i class="fa-sharp fa-light fa-file"></i>';
+                                    }
+
+                                } else {
+                                    //return the default value if the extension format is not recognised by the algorithm
+                                    return '<i class="fa-sharp fa-light fa-file"></i>';
+                                }
+
+
+
+                            }
+                            //get the extension from the file name
+                            let ext = this.fileType();
+                            //run the getExtPic()
+                            return getExtPic(ext);
                         }
+
                     }
-                    console.log(fileData.fileType());
+                    console.log(fileData.filePic());
                 })
             } else {
                 //if the user is not part of the assignee to the task- do not show a place to attach file
