@@ -863,7 +863,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
         function attachFile() {
             //CREATE THE "attach File" FUNCTIONALITY
             //Create the parent Div that houses the attach file functonality
-            if (task.assignee.includes(userId)) {
+            if (task.assignee.includes(userId) && element.id === 'team') {
                 //clear the contents of the attachFileDiv element and give it a display block
                 attachFileDiv.innerHTML = '';
                 attachFileDiv.style.display = 'block';
@@ -892,9 +892,12 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 attachInstruction.textContent = 'Submit file to complete Task.';
                 attachFileHouse.appendChild(attachInstruction);
 
-                //Add event listeners that adds the file to the task
+                //Add event listeners that adds the file to the task and prevent the user from attaching another file 
+                //if the user had already attached a file until the user deletes it
                 attachFileBtn.addEventListener('click', () => {
-                    file.click();
+                    if(task.submittedFile.length !== 1) {
+                        file.click();
+                    }
                 });
 
                 //Get the date or the time i added the file depending on the arguement provided when calling the function
@@ -936,105 +939,118 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         return 'notFound';
                     }
                 }
-                file.addEventListener('change', () => {
-                    //create an object that contains today's date as key
-                    //and a key that contains the type of file
-                    let fileData = {
-                        file: file.files[0],
-                        fileName: function() {
-                            return this.file.name;
-                        },
-                        daySubmitted: function () {
-                            getDate(true, undefined)
-                        },
-                        timeSubmitted: function () {
-                            getDate(undefined, true)
-                        },
-                        fileType: function () {
-                            let fileName = this.file;
-                            return fileType(fileName);
-                        },
-                        fileSize: function () {
-                            return `${this.file.size}mb`;
-                        }, 
-                        filePic: function () {
-                            //The functon that returns the icon based on the type of the extension
-                            //getExtensionPic()
-                            function getExtPic(ext) {
-                                //if ext parameter is not equals to notFound
-                                if(ext !== 'notFound') {
-                                    //The possible extensions for the type of mime possible
-                                    const fileExtensionGroup = {
-                                        video: ['.mp4', '.m4v', '.f4v', '.f4p', '.webm', '.ogv', '.ogg', '.mov', '.qt', '.avi', '.flv', '.mkv', '.wmv', '.asf', '.mpeg', '.mpg', '.mpe', '.msv', '.vfw', '.3gp', '.3gpp', '.3g2', '.3gpp2'],
-                                        audio: ['.mp3', '.wav', '.ogg', '.oga', '.aiff', '.aif', '.flac', '.midi', '.mid', '.wma', '.wax', '.ra', '.ram', '.rpm', '.amr'],
-                                        image: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp', '.svg', '.ico', '.jfif', '.pjpeg', '.pjp', '.apng', '.avif', '.heic', '.heif', '.pdf', '.eps', '.raw', '.cr2', '.nef', '.orf', '.sr2', '.arw', '.dng', '.raf', '.rw2', '.psd', '.ai', '.cdr', '.indd', '.epsf', '.epsi', '.wmf', '.emf', '.ico', '.jfif', '.pjpeg', '.pjp', '.svgz', '.sketch', '.ai', '.eps', '.pdf', '.raw', '.ico', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff', '.jfif', '.pjpeg', '.pjp', '.avif', '.heic', '.heif', '.figma'],
-                                        font: ['.otf', '.ttf', '.woff', '.woff2', '.eot', '.otf'],
-                                        text: ['.txt', '.html', '.htm', '.css', '.js', '.json', '.xml', '.md', '.markdown', '.csv', '.tsv', '.log', '.yaml', '.yml', '.ini', '.cfg', '.conf', '.bat', '.sh', '.c', '.cpp', '.h', '.java', '.py', '.php', '.rb', '.perl', '.pl', '.sql', '.ps1', '.vbs', '.xml', '.svg', '.rss', '.atom', '.jsx', '.ts', '.tsx', '.less', '.scss', '.sass', '.cs', '.as', '.htaccess', '.gitignore', '.dockerignore', '.htpasswd', '.babelrc', '.eslintrc', '.editorconfig', '.gitattributes', '.npmrc'],
-                                        application: ['.pdf', '.zip', '.rar', '.7z', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.exe', '.bin', '.apk', '.dmg', '.tar', '.gz', '.bz2', '.json', '.xml', '.yaml', '.yml', '.ini', '.cfg', '.conf', '.bat', '.sh', '.app', '.iso', '.sql']
-                                    }
+                //The hover effect for attaching Files-
+                attachFileBtn.addEventListener('mouseenter', () => {
+                    //if the user has already attached a file; and show different cursors to indcate behaviour
+                    if(task.submittedFile.length === 1) {
+                        attachFileBtn.style.cursor = 'not-allowed';
+                    }else {
+                        attachFileBtn.style.cursor = 'default';
+                    }
+                });
 
-                                    //Get the key of the extension Found
-                                    function getKey(ext) {
-                                        //loop through the key and its values and return the key
-                                        for(const [key, value] of Object.entries(fileExtensionGroup)) {
-                                            if(value.includes(ext)) {
-                                                return key;
-                                            }
+                file.addEventListener('change', attachSelected)
+                //The event listener for attachng files
+                function attachSelected(e) {
+                    //The user can only add a file if he wants to add another file he has to remove the file he added previously
+                    if(task.submittedFile.length !== 1) {
+                        //create an object that contains today's date as key
+                        //and a key that contains the type of file
+                        let fileData = {
+                            file: file.files[0],
+                            fileName: function() {
+                                return this.file.name;
+                            },
+                            daySubmitted: function () {
+                                getDate(true, undefined)
+                            },
+                            timeSubmitted: function () {
+                                getDate(undefined, true)
+                            },
+                            fileType: function () {
+                                let fileName = this.file;
+                                return fileType(fileName);
+                            },
+                            fileSize: function () {
+                                return `${this.file.size}mb`;
+                            }, 
+                            filePic: function () {
+                                //The functon that returns the icon based on the type of the extension
+                                //getExtensionPic()
+                                function getExtPic(ext) {
+                                    //if ext parameter is not equals to notFound
+                                    if(ext !== 'notFound') {
+                                        //The possible extensions for the type of mime possible
+                                        const fileExtensionGroup = {
+                                            video: ['.mp4', '.m4v', '.f4v', '.f4p', '.webm', '.ogv', '.ogg', '.mov', '.qt', '.avi', '.flv', '.mkv', '.wmv', '.asf', '.mpeg', '.mpg', '.mpe', '.msv', '.vfw', '.3gp', '.3gpp', '.3g2', '.3gpp2'],
+                                            audio: ['.mp3', '.wav', '.ogg', '.oga', '.aiff', '.aif', '.flac', '.midi', '.mid', '.wma', '.wax', '.ra', '.ram', '.rpm', '.amr'],
+                                            image: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp', '.svg', '.ico', '.jfif', '.pjpeg', '.pjp', '.apng', '.avif', '.heic', '.heif', '.pdf', '.eps', '.raw', '.cr2', '.nef', '.orf', '.sr2', '.arw', '.dng', '.raf', '.rw2', '.psd', '.ai', '.cdr', '.indd', '.epsf', '.epsi', '.wmf', '.emf', '.ico', '.jfif', '.pjpeg', '.pjp', '.svgz', '.sketch', '.ai', '.eps', '.pdf', '.raw', '.ico', '.png', '.jpg', '.jpeg', '.gif', '.webp', '.bmp', '.tiff', '.jfif', '.pjpeg', '.pjp', '.avif', '.heic', '.heif', '.figma'],
+                                            font: ['.otf', '.ttf', '.woff', '.woff2', '.eot', '.otf'],
+                                            text: ['.txt', '.html', '.htm', '.css', '.js', '.json', '.xml', '.md', '.markdown', '.csv', '.tsv', '.log', '.yaml', '.yml', '.ini', '.cfg', '.conf', '.bat', '.sh', '.c', '.cpp', '.h', '.java', '.py', '.php', '.rb', '.perl', '.pl', '.sql', '.ps1', '.vbs', '.xml', '.svg', '.rss', '.atom', '.jsx', '.ts', '.tsx', '.less', '.scss', '.sass', '.cs', '.as', '.htaccess', '.gitignore', '.dockerignore', '.htpasswd', '.babelrc', '.eslintrc', '.editorconfig', '.gitattributes', '.npmrc'],
+                                            application: ['.pdf', '.zip', '.rar', '.7z', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.exe', '.bin', '.apk', '.dmg', '.tar', '.gz', '.bz2', '.json', '.xml', '.yaml', '.yml', '.ini', '.cfg', '.conf', '.bat', '.sh', '.app', '.iso', '.sql']
                                         }
-                                        return 'notFound';
-                                    }
 
-                                    //get the extensions key from the getKey()
-                                    let key = getKey(ext);
-                                    // return key;
-                                    //The conditional that returns the appropriate icon for the extension that has been provided in the parameter of the getExtPic()
-                                    switch(key) {
-                                        case 'video':
-                                        return '<i class="fa-sharp fa-light fa-circle-video"></i>';
-                                        break;
+                                        //Get the key of the extension Found
+                                        function getKey(ext) {
+                                            //loop through the key and its values and return the key
+                                            for(const [key, value] of Object.entries(fileExtensionGroup)) {
+                                                if(value.includes(ext)) {
+                                                    return key;
+                                                }
+                                            }
+                                            return 'notFound';
+                                        }
 
-                                        case 'audio':
-                                        return '<i class="fa-sharp fa-light fa-circle-microphone"></i>';
-                                        break;
-                                            
-                                        case 'image':
-                                        return '<i class="fa-light fa-image"></i>';
-                                        break;
+                                        //get the extensions key from the getKey()
+                                        // let key = getKey(ext);
+                                        // return key;
+                                        //The conditional that returns the appropriate icon for the extension that has been provided in the parameter of the getExtPic()
+                                        switch(getKey(ext)) {
+                                            case 'video':
+                                            return '<i class="fa-sharp fa-light fa-circle-video"></i>';
+                                            break;
 
-                                        case 'font':
-                                        return '<i class="fa-sharp fa-light fa-font-case"></i>';
-                                        break;
+                                            case 'audio':
+                                            return '<i class="fa-sharp fa-light fa-circle-microphone"></i>';
+                                            break;
+                                                
+                                            case 'image':
+                                            return '<i class="fa-light fa-image"></i>';
+                                            break;
 
-                                        case 'text':
-                                        return '<i class="fa-sharp fa-light fa-file-lines"></i>';
-                                        break;
+                                            case 'font':
+                                            return '<i class="fa-sharp fa-light fa-font-case"></i>';
+                                            break;
 
-                                        case 'application':
-                                        return '<i class="fa-brands fa-android"></i>';
-                                        break;
+                                            case 'text':
+                                            return '<i class="fa-sharp fa-light fa-file-lines"></i>';
+                                            break;
+
+                                            case 'application':
+                                            return '<i class="fa-brands fa-android"></i>';
+                                            break;
 
 
-                                        default:
+                                            default:
+                                            return '<i class="fa-sharp fa-light fa-file"></i>';
+                                        }
+
+                                    } else {
+                                        //return the default value if the extension format is not recognised by the algorithm
                                         return '<i class="fa-sharp fa-light fa-file"></i>';
                                     }
-
-                                } else {
-                                    //return the default value if the extension format is not recognised by the algorithm
-                                    return '<i class="fa-sharp fa-light fa-file"></i>';
                                 }
-
-
-
+                                //get the extension from the file name by run the fileType() method 
+                                //and run the getExtPic() wth the value gotten.
+                                return getExtPic(this.fileType());
                             }
-                            //get the extension from the file name
-                            let ext = this.fileType();
-                            //run the getExtPic()
-                            return getExtPic(ext);
-                        }
 
+                        }
+                        task.submittedFile.push(fileData);
+                        console.log(fileData.filePic());
                     }
-                    console.log(fileData.filePic());
-                })
+                }
+                
             } else {
                 //if the user is not part of the assignee to the task- do not show a place to attach file
                 attachFileDiv.innerHTML = '';
@@ -1047,25 +1063,26 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
 
 
 
+        if(element.status === 'teamAdmin') {
+            //CREATE THE BUTTON THAT DELETES THE TASK WHEN CLICKED
+            let deleteTaskButton = document.createElement('button');
+            deleteTaskButton.textContent = 'Delete TASK';
+            deleteTaskButton.setAttribute('class', 'deleteTaskButton');
+            extraDisplay.appendChild(deleteTaskButton);
 
-        //CREATE THE BUTTON THAT DELETES THE TASK WHEN CLICKED
-        let deleteTaskButton = document.createElement('button');
-        deleteTaskButton.textContent = 'Delete TASK';
-        deleteTaskButton.setAttribute('class', 'deleteTaskButton');
-        extraDisplay.appendChild(deleteTaskButton);
-
-        deleteTaskButton.addEventListener('click', (e) => {
-            let theTaskPanel = e.currentTarget.parentNode.parentNode;
-            if (theTaskPanel.parentNode.children.length === 1) {
-                dayBody.remove();
-                //Remove the whole datedSection
-                project[elementId].datedSection.splice(dataId, 1);
-            } else {
-                theTaskPanel.remove();
-                //Remove the task from the datedSection
-                project[elementId].datedSection[dataId].task.splice(taskNo, 1)
-            }
-        });
+            deleteTaskButton.addEventListener('click', (e) => {
+                let theTaskPanel = e.currentTarget.parentNode.parentNode;
+                if (theTaskPanel.parentNode.children.length === 1) {
+                    dayBody.remove();
+                    //Remove the whole datedSection
+                    project[elementId].datedSection.splice(dataId, 1);
+                } else {
+                    theTaskPanel.remove();
+                    //Remove the task from the datedSection
+                    project[elementId].datedSection[dataId].task.splice(taskNo, 1)
+                }
+            });
+        }
 
 
     }
