@@ -856,6 +856,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
         //Create the list of assignees
         createAssigneeList();
 
+        //The attach file functionality
         let attachFileDiv = document.createElement('div');
         attachFileDiv.setAttribute('class', 'attachFileDiv');
         extraDisplay.appendChild(attachFileDiv);
@@ -962,10 +963,10 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                                 return this.file.name;
                             },
                             daySubmitted: function () {
-                                getDate(true, undefined)
+                                return getDate(true, undefined)
                             },
                             timeSubmitted: function () {
-                                getDate(undefined, true)
+                                return getDate(undefined, true)
                             },
                             fileType: function () {
                                 let fileName = this.file;
@@ -1048,6 +1049,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         }
                         task.submittedFile.push(fileData);
                         console.log(fileData.filePic());
+                        displayAttached()
                     }
                 }
                 
@@ -1058,8 +1060,55 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
             }
         }
         attachFile()
+        //add the multple file submission if there are multiple assignees
 
-        
+        //The UI that shows the details of the file uploaded
+        let attachUi = document.createElement('div');
+        attachUi.setAttribute('class', 'attachUi');
+        extraDisplay.appendChild(attachUi);
+
+        function displayAttached() {
+            task.submittedFile.forEach(ele => {
+                //the card for the file uploaded
+                let submittedDoc = document.createElement('div');
+                submittedDoc.setAttribute('class', 'submittedDoc');
+                attachUi.appendChild(submittedDoc);
+
+                //the icon div that indicates the fileType
+                let iconDiv = document.createElement('div');
+                iconDiv.setAttribute('class', 'iconDiv');
+                submittedDoc.appendChild(iconDiv);
+                //set the icon from the element
+                iconDiv.innerHTML = ele.filePic();
+
+                //TELL BR SUNDAY
+                //!!!!07015583237-DVD
+                //the DIV that encompasses the name of the file and the date shared
+                let nameDateDiv = document.createElement('div');
+                nameDateDiv.setAttribute('class', 'nameDateDiv');
+                submittedDoc.appendChild(nameDateDiv);
+
+                let namePlaceholder = document.createElement('div');
+                nameDateDiv.appendChild(namePlaceholder);
+                //set the name content of the namePlaceholder
+                namePlaceholder.innerHTML = ele.fileName();
+
+                let dateTimePlaceholder = document.createElement('div');
+                nameDateDiv.appendChild(dateTimePlaceholder);
+                //set the date and time content of the dateTimePlaceholder
+                let date = ele.daySubmitted();
+                let time = ele.timeSubmitted();
+                dateTimePlaceholder.innerHTML = `${date}- ${time}`;
+                
+                
+                //the fileSize Div
+                let fileSizeDiv = document.createElement('div');
+                submittedDoc.appendChild(fileSizeDiv);
+                //set the contents of the fileSize Div
+                fileSizeDiv.innerHTML = ele.fileSize();
+
+            })
+        }
 
 
 
