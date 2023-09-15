@@ -535,14 +535,14 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                             assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
                             assigneeProfilePic.style.backgroundImage = `url(${task.assignorPic})`;
                             assigneeProfilePic.style.transform = `translate(${index * -14}px, -50%)`;
-                            assigneeProfilePic.style.zIndex = `${9999 - index}`;
+                            assigneeProfilePic.style.zIndex = `${20 - index}`;
                             profileEle.appendChild(assigneeProfilePic);
                         } else {
                             const assigneeProfilePic = document.createElement('div');
                             assigneeProfilePic.setAttribute('class', 'assigneeProfilePic');
                             assigneeProfilePic.style.backgroundImage = `url(${task.profilePic[index % 3]})`;
                             assigneeProfilePic.style.transform = `translate(${index * -14}px, -50%)`;
-                            assigneeProfilePic.style.zIndex = `${9999 - index}`;
+                            assigneeProfilePic.style.zIndex = `${20 - index}`;
                             profileEle.appendChild(assigneeProfilePic);
                         }
                     })
@@ -554,7 +554,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         //The line below is a simple trick used to assign profile picture
                         assigneeProfilePic.style.backgroundImage = `url(${task.profilePic[index % 3]})`;
                         assigneeProfilePic.style.transform = `translate(${index * -14}px, -50%)`;
-                        assigneeProfilePic.style.zIndex = `${9999 - index}`;
+                        assigneeProfilePic.style.zIndex = `${20 - index}`;
                         profileEle.appendChild(assigneeProfilePic);
                     })
                 }
@@ -962,6 +962,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                             fileName: function() {
                                 return this.file.name;
                             },
+                            fileSubmitter: userId,
                             daySubmitted: function () {
                                 return getDate(true, undefined)
                             },
@@ -973,7 +974,27 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                                 return fileType(fileName);
                             },
                             fileSize: function () {
-                                return `${this.file.size}mb`;
+                                //Data storage unit measurement
+                                let kb = 1024;
+                                let mb = 1024 * 1024;
+                                let gb = 1024 * 1024 * 1024;
+                                let tb = 1024 * 1024 * 1024 * 1024;
+                                //if the file size is greater than or equals to 1kb and less than 1mb
+                                if(this.file.size >= kb && this.file.size < mb) {
+                                    return `${(this.file.size / kb).toFixed(1)}kb`;
+                                } else if(this.file.size >= mb && this.file.size < gb) {
+                                    //if the file size is greater than than or equals to 1mb and less than 1gb
+                                    return `${(this.file.size / mb).toFixed(1)}mb`;
+                                } else if (this.file.size >= gb && this.file.size < tb) {
+                                    //if the file size is greater than than or equals to 1mb and less than 1tb
+                                    return `${(this.file.size / gb).toFixed(1)}gb`;
+                                } else if (this.file.size >= tb) {
+                                    //if the file size is greater than than or equals to 1mb and less than 1gb
+                                    return `${(this.file.size / tb).toFixed(1)}`;
+                                } else {
+                                    return `${this.file.size}mb`;
+                                }
+                                
                             }, 
                             filePic: function () {
                                 //The functon that returns the icon based on the type of the extension
@@ -1067,6 +1088,9 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
         attachUi.setAttribute('class', 'attachUi');
         extraDisplay.appendChild(attachUi);
 
+        if(task.submittedFile.length >= 1) {
+            displayAttached();
+        }
         function displayAttached() {
             task.submittedFile.forEach(ele => {
                 //the card for the file uploaded
@@ -1103,10 +1127,46 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 
                 //the fileSize Div
                 let fileSizeDiv = document.createElement('div');
+                fileSizeDiv.setAttribute('class', 'fileSizeDiv');
                 submittedDoc.appendChild(fileSizeDiv);
                 //set the contents of the fileSize Div
                 fileSizeDiv.innerHTML = ele.fileSize();
 
+                //The delete button for the user who uploaded 
+                //OR the download button for the other co-users
+                if(ele.fileSubmitter === userId) {
+                    let deleteFile = document.createElement('div');
+                    deleteFile.setAttribute('class', 'deleteFile');
+                    submittedDoc.appendChild(deleteFile);
+                    //set the delete icon of the deleteFile element
+                    deleteFile.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
+                }else {
+                    let downloadBtn = document.createElement('div');
+                    downloadBtn.setAttribute('class', 'downloadBtn');
+                    submittedDoc.appendChild(downloadBtn);
+
+                    //create the download circular progress bar
+                    let downloadProgressBar = document.createElement('div');
+                    downloadProgressBar.setAttribute('class', 'downloadProgressBar');
+                    downloadBtn.appendChild(downloadProgressBar);
+
+                    //create the element that houses the download icon
+                    let downloadElement = document.createElement('a');
+                    downloadElement.setAttribute('class', 'downloadElement');
+                    downloadElement.setAttribute('download', `${ele.fileName()}`);
+                    downloadBtn.appendChild(downloadElement);
+                    let data = URL.createObjectURL(ele.file);
+                    downloadElement.href = data;
+                    downloadElement.innerHTML = '<i class="fa-sharp fa-light fa-arrow-down-to-line"></i>';
+                    //setting the progress event
+                    downloadElement.addEventListener('progress', () => {
+                        console.log('doing!!!');
+                    })
+
+
+
+                    //set the dowload icon of the downloadBtn Element
+                }
             })
         }
 

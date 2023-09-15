@@ -195,7 +195,7 @@ div.meetingTile {
         top: 0;
         transition: left 0.5s linear, width 0.5s linear;
         background-color: #fff;
-        z-index: 666;
+        z-index: 301;
     }
     div.side > div.close{
         display: none;
@@ -207,7 +207,7 @@ div.meetingTile {
         aspect-ratio: 1/1;
         text-align: center;
         transition: display 0.05s linear 5s;
-        z-index: -1;
+        z-index: 302;
     }
     div.side > div.close i {
         font-size: 2rem;
@@ -431,7 +431,7 @@ div.headingMain {
     position: sticky;
     top: 0;
     background-color: #fff;
-    z-index: 999;
+    z-index: 20;
     padding-top: 20px;
 }
 div.headDiv {
@@ -654,7 +654,7 @@ div.bodyMain {
     border: 1px solid #aaa;
     font-size: 1.3rem;
     line-height: 1.3rem;
-    z-index: 99;
+    z-index: 9;
 }
 .assigneeSuggestion{
     display: none;
@@ -733,6 +733,35 @@ div.bodyMain {
 }
 .attachFileBtn:hover {
     background-color: #dfdfdf;
+}
+.submittedDoc {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+    background-color: red;
+    width: 100%;
+    padding: 10px;
+}
+.iconDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 10%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: #dfdfdf;
+}
+.nameDateDiv {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+.fileSizeDiv {
+    width: 10%;
+    height: 100%;
+    background-color: #fff;
+    
 }
 /* The deleteTaskButton styling */
 .deleteTaskButton {
