@@ -1113,16 +1113,18 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 submittedDoc.appendChild(nameDateDiv);
 
                 let namePlaceholder = document.createElement('div');
+                namePlaceholder.setAttribute('class', 'namePlaceholder');
                 nameDateDiv.appendChild(namePlaceholder);
                 //set the name content of the namePlaceholder
                 namePlaceholder.innerHTML = ele.fileName();
 
                 let dateTimePlaceholder = document.createElement('div');
+                dateTimePlaceholder.setAttribute('class', 'dateTimePlaceholder');
                 nameDateDiv.appendChild(dateTimePlaceholder);
                 //set the date and time content of the dateTimePlaceholder
                 let date = ele.daySubmitted();
                 let time = ele.timeSubmitted();
-                dateTimePlaceholder.innerHTML = `${date}- ${time}`;
+                dateTimePlaceholder.innerHTML = `${date}-${time}`;
                 
                 
                 //the fileSize Div
@@ -1152,15 +1154,52 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
 
                     //create the element that houses the download icon
                     let downloadElement = document.createElement('a');
-                    downloadElement.setAttribute('class', 'downloadElement');
-                    downloadElement.setAttribute('download', `${ele.fileName()}`);
-                    downloadBtn.appendChild(downloadElement);
+                    downloadElement.setAttribute('class', 'downloadElement'); 
+                    downloadProgressBar.appendChild(downloadElement);
+                    
                     let data = URL.createObjectURL(ele.file);
-                    downloadElement.href = data;
                     downloadElement.innerHTML = '<i class="fa-sharp fa-light fa-arrow-down-to-line"></i>';
-                    //setting the progress event
-                    downloadElement.addEventListener('progress', () => {
-                        console.log('doing!!!');
+                    //setting the download event
+                    downloadElement.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        fetch(data).then(response => {
+                            if(!response.ok) {
+                                throw new Error('The response was not okay')
+                            }
+                            let response2 = response.clone();
+                            let downloadSize = response.headers.get('content-length');
+                            let fileToDownload = response.body.getReader();
+                            let loaded = 0;
+                            //update the circular progress bar using the downloadStatus function
+                            function downloadStatus(object) {
+                                downloadProgressBar.style.backgroundImage = `conic-gradient(rgb(43, 106, 241) 0deg ${object.status * 360}deg, transparent ${object.status * 360}deg ${(1 - object.status) * 360}deg)`;
+                            }
+
+                            function keepReadingDownload({done, value}) {
+                                if(done) {
+                                    return response2.blob();
+                                } else {
+                                loaded += value.length;
+                                downloadStatus({status: (loaded/downloadSize)});
+                                return fileToDownload.read().then(keepReadingDownload);
+                                }
+                            }
+                            return fileToDownload.read().then(keepReadingDownload)
+                        }).then(blob => {
+                            //create an instantaneous anchorElement that will be deleted after use
+                            //it will be used for the download
+                            let url = URL.createObjectURL(blob);
+                            console.log(url);
+                            let anchorElement = document.createElement('a');
+                            anchorElement.href = url;
+                            anchorElement.download = ele.fileName();
+                            submittedDoc.appendChild(anchorElement);
+                            anchorElement.style.display = 'none';
+                            anchorElement.click();
+                            anchorElement.remove();
+                            URL.revokeObjectURL(url);
+                            downloadProgressBar.style.backgroundImage = ``;
+                        })
                     })
 
 

@@ -739,7 +739,7 @@ div.bodyMain {
     flex-direction: row;
     align-items: center;
     gap: 5px;
-    background-color: red;
+    background-color: #fff;
     width: 100%;
     padding: 10px;
 }
@@ -751,17 +751,62 @@ div.bodyMain {
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     background-color: #dfdfdf;
+    font-size: 1.9rem;
 }
 .nameDateDiv {
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 65%;
+
+}
+.namePlaceholder {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.dateTimePlaceholder {
+    font-size: 0.9rem;
+    color: rgba(0 ,0 ,0 ,0.4);
+}
+.dateTimePlaceholder i {
+    font-size: 0.6rem;
+    /* font-weight: 300; */
 }
 .fileSizeDiv {
+    width: 15%;
+    font-size: 0.9rem;
+}
+.deleteFile {  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.downloadBtn, .deleteFile {
     width: 10%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    background-color: #dfdfdf;
+}
+.downloadProgressBar{
+    width: 100%;
     height: 100%;
+    position: relative;
+    border-radius: 50%;
+    /* background-color: green; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.downloadElement {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 3px 3px 3px 3px;
+    border-radius: 50%;
     background-color: #fff;
-    
+    margin: 0;
+    color: rgba(0 ,0 ,0 ,0.7);
 }
 /* The deleteTaskButton styling */
 .deleteTaskButton {
