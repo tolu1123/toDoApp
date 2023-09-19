@@ -1104,9 +1104,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 submittedDoc.appendChild(iconDiv);
                 //set the icon from the element
                 iconDiv.innerHTML = ele.filePic();
-
-                //TELL BR SUNDAY
-                //!!!!07015583237-DVD
+ 
                 //the DIV that encompasses the name of the file and the date shared
                 let nameDateDiv = document.createElement('div');
                 nameDateDiv.setAttribute('class', 'nameDateDiv');
@@ -1157,49 +1155,114 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                     downloadElement.setAttribute('class', 'downloadElement'); 
                     downloadProgressBar.appendChild(downloadElement);
                     
-                    let data = URL.createObjectURL(ele.file);
-                    downloadElement.innerHTML = '<i class="fa-sharp fa-light fa-arrow-down-to-line"></i>';
-                    //setting the download event
-                    downloadElement.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        fetch(data).then(response => {
-                            if(!response.ok) {
-                                throw new Error('The response was not okay')
-                            }
-                            let response2 = response.clone();
-                            let downloadSize = response.headers.get('content-length');
-                            let fileToDownload = response.body.getReader();
-                            let loaded = 0;
-                            //update the circular progress bar using the downloadStatus function
-                            function downloadStatus(object) {
-                                downloadProgressBar.style.backgroundImage = `conic-gradient(rgb(43, 106, 241) 0deg ${object.status * 360}deg, transparent ${object.status * 360}deg ${(1 - object.status) * 360}deg)`;
-                            }
+                    //create the element that houses the cancel button 
+                    let cancelElement = document.createElement('a')
+                    cancelElement.setAttribute('class', 'cancelElement');
+                    cancelElement.style.display = 'none';
+                    downloadProgressBar.appendChild(cancelElement);
 
-                            function keepReadingDownload({done, value}) {
-                                if(done) {
-                                    return response2.blob();
-                                } else {
-                                loaded += value.length;
-                                downloadStatus({status: (loaded/downloadSize)});
-                                return fileToDownload.read().then(keepReadingDownload);
-                                }
-                            }
-                            return fileToDownload.read().then(keepReadingDownload)
-                        }).then(blob => {
-                            //create an instantaneous anchorElement that will be deleted after use
-                            //it will be used for the download
-                            let url = URL.createObjectURL(blob);
-                            console.log(url);
-                            let anchorElement = document.createElement('a');
-                            anchorElement.href = url;
-                            anchorElement.download = ele.fileName();
-                            submittedDoc.appendChild(anchorElement);
-                            anchorElement.style.display = 'none';
-                            anchorElement.click();
-                            anchorElement.remove();
-                            URL.revokeObjectURL(url);
+                    downloadElement.innerHTML = '<i class="fa-sharp fa-light fa-arrow-down-to-line"></i>';
+                    cancelElement.innerHTML = '<i class="fa-sharp fa-regular fa-xmark"></i>';
+
+                    //setting the download event
+                    let downloadingFile = false;
+                    
+                    //declare the controller
+                    let controller;
+
+                    //the bloburl
+                    let blobUrl = null;
+
+                    cancelElement.addEventListener('click', () => {
+                        //only cancel the download if i am already downloading the file
+                        if(downloadingFile === true) {
+                            controller.abort();
+                            
+                            //clear the download progress bar
                             downloadProgressBar.style.backgroundImage = ``;
-                        })
+
+                            // Revoke the Object URL if it was created
+                            if (blobUrl) {
+                                URL.revokeObjectURL(blobUrl);
+                                blobUrl = null;
+                            }
+                            console.log('ttried to cancel the download');
+                            downloadingFile = false;
+
+                            cancelElement.style.display = 'none';
+                            downloadElement.style.display = 'flex';
+                        }
+                    })
+                    downloadElement.addEventListener('click', (e) => {
+
+                        cancelElement.style.display = 'flex';
+                        downloadElement.style.display = 'none';
+
+                        if(downloadingFile === false) {
+                            //add the controller for aborting the fetch if the user cancels the download
+                            controller = new AbortController();
+                            e.preventDefault();
+
+                            let data = URL.createObjectURL(ele.file);
+
+                        
+                        
+                            const signal = controller.signal;
+ 
+                            //set the downloading status FLAG to false 
+                            downloadingFile = true;
+
+                            fetch(data, { signal }).then(response => {
+                                if(!response.ok) {
+                                    throw new Error('The response was not okay')
+                                }
+                                let response2 = response.clone();
+                                let downloadSize = response.headers.get('content-length');
+                                let fileToDownload = response.body.getReader();
+                                let loaded = 0;
+                                //update the circular progress bar using the downloadStatus function
+                                function downloadStatus(object) {
+                                    downloadProgressBar.style.backgroundImage = `conic-gradient(rgb(43, 106, 241) 0deg ${object.status * 360}deg, transparent ${object.status * 360}deg ${(1 - object.status) * 360}deg)`;
+                                }
+
+                                function keepReadingDownload({done, value}) {
+                                    if(done) { 
+                                        URL.revokeObjectURL(data);
+                                        //if download is done then return the download file as a blob
+                                        return response2.blob();
+                                    } else {
+                                    //keep getting the amount that has been downloaded
+                                    loaded += value.length;
+                                    //run the function that keeps uploading the download progress bar
+                                    downloadStatus({status: (loaded/downloadSize)});
+                                    //keep reading the download until the downloading is done
+                                    return fileToDownload.read().then(keepReadingDownload);
+                                    }
+                                }
+                                console.log(downloadingFile);
+                                return fileToDownload.read().then(keepReadingDownload);
+                                
+                            }).then(blob => {
+                                //create an instantaneous anchorElement that will be deleted after use
+                                //it will be used for the download
+                                let url = URL.createObjectURL(blob);
+                                blobUrl = url;
+                                console.log(url);
+                                let anchorElement = document.createElement('a');
+                                anchorElement.href = url;
+                                anchorElement.download = ele.fileName();
+                                submittedDoc.appendChild(anchorElement);
+                                anchorElement.style.display = 'none';
+                                anchorElement.click();
+                                anchorElement.remove();
+                                URL.revokeObjectURL(url);
+                                downloadProgressBar.style.backgroundImage = ``;
+ 
+                            }).catch(error => {
+                                console.error('Error:', error);
+                            })
+                         
+                        }
                     })
 
 

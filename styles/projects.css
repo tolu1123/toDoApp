@@ -108,10 +108,39 @@ div.meetingTile {
     div.panel {
         width: 33.33% !important;
     }
+    .iconDiv {
+        width: 8% !important;
+        font-size: 1.7rem !important;
+    }
+    .nameDateDiv {
+        width: 75% !important;
+    }
+    .fileSizeDiv {
+        width: 9% !important;
+    }
+    .downloadBtn, .deleteFile {
+        width:8% !important;
+        font-size: 1.7rem !important;
+    }
 }
 @media (min-width: 701px) and (max-width: 990px) {
     div.panel {
         width: 25% !important;
+    }
+    .iconDiv {
+        width: 5% !important;
+        font-size: 1.8rem !important;
+    }
+    .nameDateDiv {
+        width: 81% !important;
+    }
+    .fileSizeDiv {
+        width: 9% !important;
+        font-size: 1.2rem !important;
+    }
+    .downloadBtn, .deleteFile {
+        width: 5% !important;
+        font-size: 1.2rem !important;
     }
 }
 @media (max-width: 991px) {
@@ -797,7 +826,7 @@ div.bodyMain {
     align-items: center;
     justify-content: center;
 }
-.downloadElement {
+.downloadElement, .cancelElement  {
     display: flex;
     align-items: center;
     justify-content: center;
