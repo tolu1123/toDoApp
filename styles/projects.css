@@ -246,7 +246,7 @@ div.meetingTile {
         position: relative;
         width: calc(100% - 45px);
         left: 45px;
-        padding: 20px;
+        padding: 0 20px 10px;
     }
     div.file {
         display: none;
@@ -460,7 +460,7 @@ div.headingMain {
     position: sticky;
     top: 0;
     background-color: #fff;
-    z-index: 20;
+    z-index: 25;
     padding-top: 20px;
 }
 div.headDiv {
