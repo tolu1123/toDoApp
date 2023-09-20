@@ -474,7 +474,8 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
             checkTask(task, label, tick);
             }
         });
-
+        //the function that changes that indicates the label is being clicked 
+        //by changing the color and displaying the tick mark
         function checkTask(task, label, tick) {
             if (task.taskStatus === 'undone') {
                 label.style.backgroundColor = 'mediumseagreen';
@@ -488,6 +489,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 textDescrip.style.textDecoration = 'none';
             }
         }
+        //indicates the tick mark when the page initially runs
         if (task.taskStatus === 'done') {
             label.style.backgroundColor = 'mediumseagreen';
             tick.style.display = 'block';
@@ -872,6 +874,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
 
                 //create the input element with "TYPE" file
                 let file = document.createElement('input');
+                file.setAttribute('class', 'inputFile');
                 file.type = 'file';
                 file.style.display = 'none';
                 attachFileDiv.appendChild(file);
@@ -896,17 +899,16 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 //Add event listeners that adds the file to the task and prevent the user from attaching another file 
                 //if the user had already attached a file until the user deletes it
                 attachFileBtn.addEventListener('click', () => {
-                    if(task.submittedFile.length !== 1) {
+                    if(!task.submittedFile.some(file => file.fileSubmitter === userId)) {
                         file.click();
                     }
                 });
 
                 //Get the date or the time i added the file depending on the arguement provided when calling the function
-                function getDate(giveDate, giveTime) {
+                function getDate() {
                     let date = new Date();
                     //if the giveDate arguement is provided in the function call and giveTime is not
                     //return only the date
-                    if (giveDate && !giveTime) {
                     let year = date.getFullYear();
                     let rawMonth = date.getMonth();
                     let day = date.getDate();
@@ -914,15 +916,14 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                     let months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
                     let month = months[rawMonth];
                     return `${month} ${day}, ${year}`;
-                    }
 
-                    //if the giveTime arguement is provided in the function call and giveDate is not
+                }
+                function getTime(){
                     //return only the 'Time in AM/PM'
-                    if (!giveDate && giveTime) {
-                        let time = date.getHours();
-                        return time === 0? `12am`: time > 0 && time < 11 ? `${time}am`: time === 12? `12pm`: time > 12 ? `${time % 12}pm`: null;
-                        
-                    }
+                    let date = new Date();
+                    let time = date.getHours();
+                    return time === 0? `12am`: time > 0 && time <= 11 ? `${time}am`: time === 12? `12pm`: time > 12 ? `${time % 12}pm`: null;
+                    
                 }
 
                 //Function to get the file type of the file that is being shared
@@ -940,10 +941,14 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         return 'notFound';
                     }
                 }
+                
+    
                 //The hover effect for attaching Files-
-                attachFileBtn.addEventListener('mouseenter', () => {
-                    //if the user has already attached a file; and show different cursors to indcate behaviour
-                    if(task.submittedFile.length === 1) {
+                attachFileBtn.addEventListener('mouseenter', () => { 
+                    //if the user has already attached a file; and show different cursors to indicate behaviour
+                    //Using SOME (an Array method) to check if there is the user has added a file and wants to do so again
+                    //if yes do not let him add
+                    if(task.submittedFile.some(file => file.fileSubmitter === userId)) {
                         attachFileBtn.style.cursor = 'not-allowed';
                     }else {
                         attachFileBtn.style.cursor = 'default';
@@ -954,7 +959,7 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 //The event listener for attachng files
                 function attachSelected(e) {
                     //The user can only add a file if he wants to add another file he has to remove the file he added previously
-                    if(task.submittedFile.length !== 1) {
+                    if(!task.submittedFile.some(file => file.fileSubmitter === userId)) {
                         //create an object that contains today's date as key
                         //and a key that contains the type of file
                         let fileData = {
@@ -964,10 +969,10 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                             },
                             fileSubmitter: userId,
                             daySubmitted: function () {
-                                return getDate(true, undefined)
+                                return getDate();
                             },
                             timeSubmitted: function () {
-                                return getDate(undefined, true)
+                                return getTime();
                             },
                             fileType: function () {
                                 let fileName = this.file;
@@ -1069,7 +1074,6 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
 
                         }
                         task.submittedFile.push(fileData);
-                        console.log(fileData.filePic());
                         displayAttached()
                     }
                 }
@@ -1092,7 +1096,8 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
             displayAttached();
         }
         function displayAttached() {
-            task.submittedFile.forEach(ele => {
+            attachUi.innerHTML = '';
+            task.submittedFile.forEach((ele, index) => {
                 //the card for the file uploaded
                 let submittedDoc = document.createElement('div');
                 submittedDoc.setAttribute('class', 'submittedDoc');
@@ -1135,11 +1140,19 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                 //The delete button for the user who uploaded 
                 //OR the download button for the other co-users
                 if(ele.fileSubmitter === userId) {
-                    let deleteFile = document.createElement('div');
-                    deleteFile.setAttribute('class', 'deleteFile');
-                    submittedDoc.appendChild(deleteFile);
-                    //set the delete icon of the deleteFile element
-                    deleteFile.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
+                    let deleteFileBtn = document.createElement('div');
+                    deleteFileBtn.setAttribute('class', 'deleteFileBtn');
+                    submittedDoc.appendChild(deleteFileBtn);
+                    //set the delete icon of the deleteFileBtn element
+                    deleteFileBtn.innerHTML = '<i class="fa-regular fa-trash-can"></i>';
+                    
+                    //adding the deleteFileBtn's addEventListeners
+                    deleteFileBtn.addEventListener('click', () => {
+                        //use the index to delete the file
+                        task.submittedFile.splice(index, 1);
+                        extraDisplay.querySelector('.inputFile').value = '';
+                        displayAttached()
+                    })
                 }else {
                     let downloadBtn = document.createElement('div');
                     downloadBtn.setAttribute('class', 'downloadBtn');
@@ -1264,10 +1277,6 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                          
                         }
                     })
-
-
-
-                    //set the dowload icon of the downloadBtn Element
                 }
             })
         }
