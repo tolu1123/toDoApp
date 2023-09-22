@@ -1074,6 +1074,9 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
 
                         }
                         task.submittedFile.push(fileData);
+                        // Save the shared file into the pool of other files
+                        element.sharedFiles.push(fileData);
+                        // Run the function to display the file that has been attached
                         displayAttached()
                     }
                 }
@@ -1151,7 +1154,11 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         //use the index to delete the file
                         task.submittedFile.splice(index, 1);
                         extraDisplay.querySelector('.inputFile').value = '';
-                        displayAttached()
+                        // Remove the file from the pool of other files by first locating the file
+                        let fileLocation = element.sharedFiles.indexOf(ele);
+                        element.sharedFiles.splice(fileLocation, 1);
+                        //Run the function to display the rest of the attached files
+                        displayAttached();
                     })
                 }else {
                     let downloadBtn = document.createElement('div');
