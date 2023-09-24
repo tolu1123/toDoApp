@@ -104,187 +104,7 @@ div.meetingTile {
     background-color: #f7f7f7;
     overflow-y: auto;
 }
-@media (min-width: 500px) and (max-width: 700px) {
-    div.panel {
-        width: 33.33% !important;
-    }
-    .iconDiv {
-        width: 8% !important;
-        font-size: 1.7rem !important;
-    }
-    .nameDateDiv {
-        width: 75% !important;
-    }
-    .fileSizeDiv {
-        width: 9% !important;
-    }
-    .downloadBtn, .deleteFileBtn {
-        width:8% !important;
-        font-size: 1.7rem !important;
-    }
-}
-@media (min-width: 701px) and (max-width: 990px) {
-    div.panel {
-        width: 25% !important;
-    }
-    .iconDiv {
-        width: 5% !important;
-        font-size: 1.8rem !important;
-    }
-    .nameDateDiv {
-        width: 81% !important;
-    }
-    .fileSizeDiv {
-        width: 9% !important;
-        font-size: 1.2rem !important;
-    }
-    .downloadBtn, .deleteFileBtn {
-        width: 5% !important;
-        font-size: 1.2rem !important;
-    }
-}
-@media (max-width: 991px) {
-    div.link {
-        display: none;
-    }
-    main {
-        display: flex;
-        position: relative;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        width: 100%;
-        min-height: calc(100vh - 61px);
-    }
-    div.aside {
-        display: flex;
-        flex-direction: row;
-        position: absolute;
-        min-width: 40px;
-        z-index: 300;
-        height: calc(100vh - 60px);
-        /* background-color: rgba(0, 0, 0, 0.5); */
-        transition: width 2s;
-    }
-    div.sideLink {
-        display: flex;
-        flex-direction: column;
-        width: 45px;
-        padding: 0 0 0 2px;
-        background-color: #fff;
-        z-index: 999;
-        border-right: 1px solid #eee;
-    }
-    div.sideLink a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 0;
-        text-align: center;
-        margin: 0;
-    }
-    div.sideLink a.active {
-        border: 1px solid #eee;
-        border-right: none;
-        border-radius: 7px 0 0 7px;
-        width: 44px;
-        background-color: #fff;
-        z-index: 1999;
-        position: relative;
-    }
-    div.sideLink a:not(a:first-child).active::before {
-        content: '';
-        width: 7px;
-        height: 7px;
-        background-color: #fff;
-        position: absolute;
-        top: -8px;
-        right: 1px;
-        border-bottom-right-radius: 7px;
-        border-bottom: 1px solid #eee;
-        border-right: 1px solid #eee;
-        box-shadow: 2px 2px 0 2px #fff;
-    }
-    div.sideLink a.active::after {
-        content: '';
-        width: 7px;
-        height: 7px;
-        background-color: #fff;
-        position: absolute;
-        bottom: -8px;
-        right: 1px;
-        border-top-right-radius: 7px;
-        border-top: 1px solid #eee;
-        border-right: 1px solid #eee;
-        box-shadow: 2px -2px 0 0.5px #fff;
-    }
-    div.side {
-        width: 0;
-        position: relative;
-        left: -250px;
-        top: 0;
-        transition: left 0.5s linear, width 0.5s linear;
-        background-color: #fff;
-        z-index: 301;
-    }
-    div.side > div.close{
-        display: none;
-        position: absolute;
-        right: -3.1rem;
-        top: 10px;
-        border: 1px dashed black;
-        width: 2.5rem;
-        aspect-ratio: 1/1;
-        text-align: center;
-        transition: display 0.05s linear 5s;
-        z-index: 302;
-    }
-    div.side > div.close i {
-        font-size: 2rem;
-        text-align: center;
-    }
-    div.container {
-        position: relative;
-        width: calc(100% - 45px);
-        left: 45px;
-        padding: 0 20px 10px;
-    }
-    div.file {
-        display: none;
-    }
 
-    div.addProjectBox, div.editProjectBox, div.addTaskBox, div.deleteDialogueBox{ 
-        width: 85%; 
-    }
-    /* THE STYLE FOR THE CREATE NEW TASK BUTTON IN THE MAINUI FOR MOBILE VIEW */
-    div.headDiv + button {
-        font-size: 1rem;
-        font-weight: 400;
-    }
-}
-
-@media (min-width: 992px) {
-    main {
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: center;
-        width: 100%;
-    }
-    div.aside {
-        width: 280px;
-        border-right: 0.25px solid #eee;
-        height: calc(100vh - 60px);
-    }
-    div.container {
-        width: calc(100vw - 550px);
-        border-right: 0.25px solid #eee;
-        padding: 0 20px 10px;
-        height: calc(100vh - 60px);
-    }
-    div.file {
-        width: 270px;
-        /* border: 0.25px solid #eee; */
-    }
-}
 
 /* Styling the addProjectMenu Box */
 div.addProjectMenu, div.editProjectMenu, div.addTaskMenu, div.deleteDialogueMenu  {
@@ -791,6 +611,9 @@ div.bodyMain {
 .namePlaceholder {
     font-size: 1.05rem;
     font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .dateTimePlaceholder {
     font-size: 0.9rem;
@@ -866,7 +689,6 @@ div.file div.title h2 {
     font-size: 1.6rem;
     font-weight: 600;
     line-height: 1.8rem;
-    text-transform: uppercase;
 }
 div.file div.title {
     display: flex;
@@ -897,7 +719,6 @@ div.file  div.title > div.fileView > span {
 }
 div.file div.fileSearch{
     width: 100%;
-    height: 50px;
 }
 div.file div.fileSearch input {
     height: 3.2rem;
@@ -909,9 +730,10 @@ div.file div.fileSearch input {
     background-size: 16px 16px;
     border-radius: 3px;
 }
-div.tag {
+div.tags {
     padding: 1rem 0 0;
     border-bottom: 1px solid #eee;
+    /* height: 20px; */
 }
 div.fileList {
     width: 100%;
@@ -919,6 +741,219 @@ div.fileList {
     background-color: pink;
     padding: 20px;
 }
-div.fileSmokeScreen {
-    background-color: #fff;
+/************************************* MEDIA KUERIES GOES HERE *************************************/
+@media (min-width: 500px) and (max-width: 700px) {
+    .iconDiv {
+        width: 8%;
+        font-size: 1.7rem;
+    }
+    .nameDateDiv {
+        width: 75%;
+    }
+    .fileSizeDiv {
+        width: 9%;
+    }
+    .downloadBtn, .deleteFileBtn {
+        width:8%;
+        font-size: 1.7rem;
+    }
+}
+@media (min-width: 701px) and (max-width: 990px) {
+    .iconDiv {
+        width: 5%;
+        font-size: 1.8rem;
+    }
+    .nameDateDiv {
+        width: 81%;
+    }
+    .fileSizeDiv {
+        width: 9%;
+        font-size: 1.2rem;
+    }
+    .downloadBtn, .deleteFileBtn {
+        width: 5%;
+        font-size: 1.2rem;
+    }
+}
+@media (max-width: 429px) {
+    div.link {
+        display: none;
+    }
+    main {
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        width: 100%;
+        min-height: calc(100vh - 61px);
+    }
+    div.aside {
+        display: flex;
+        flex-direction: row;
+        position: absolute;
+        min-width: 40px;
+        z-index: 300;
+        height: calc(100vh - 60px);
+        /* background-color: rgba(0, 0, 0, 0.5); */
+        transition: width 2s;
+    }
+    div.sideLink {
+        display: flex;
+        flex-direction: column;
+        width: 45px;
+        padding: 0 0 0 2px;
+        background-color: #fff;
+        z-index: 999;
+        border-right: 1px solid #eee;
+    }
+    div.sideLink a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0;
+        text-align: center;
+        margin: 0;
+    }
+    div.sideLink a.active {
+        border: 1px solid #eee;
+        border-right: none;
+        border-radius: 7px 0 0 7px;
+        width: 44px;
+        background-color: #fff;
+        z-index: 1999;
+        position: relative;
+    }
+    div.sideLink a:not(a:first-child).active::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        background-color: #fff;
+        position: absolute;
+        top: -8px;
+        right: 1px;
+        border-bottom-right-radius: 7px;
+        border-bottom: 1px solid #eee;
+        border-right: 1px solid #eee;
+        box-shadow: 2px 2px 0 2px #fff;
+    }
+    div.sideLink a.active::after {
+        content: '';
+        width: 7px;
+        height: 7px;
+        background-color: #fff;
+        position: absolute;
+        bottom: -8px;
+        right: 1px;
+        border-top-right-radius: 7px;
+        border-top: 1px solid #eee;
+        border-right: 1px solid #eee;
+        box-shadow: 2px -2px 0 0.5px #fff;
+    }
+    div.side {
+        width: 0;
+        position: relative;
+        left: -250px;
+        top: 0;
+        transition: left 0.5s linear, width 0.5s linear;
+        background-color: #fff;
+        z-index: 301;
+    }
+    div.side > div.close{
+        display: none;
+        position: absolute;
+        right: -3.1rem;
+        top: 10px;
+        border: 1px dashed black;
+        width: 2.5rem;
+        aspect-ratio: 1/1;
+        text-align: center;
+        transition: display 0.05s linear 5s;
+        z-index: 302;
+    }
+    div.side > div.close i {
+        font-size: 2rem;
+        text-align: center;
+    }
+    div.container {
+        position: relative;
+        width: calc(100% - 45px);
+        left: 45px;
+        padding: 0 20px 10px;
+    }
+    div.file {
+        display: none;
+    }
+
+    div.addProjectBox, div.editProjectBox, div.addTaskBox, div.deleteDialogueBox{ 
+        width: 85%; 
+    }
+    /* THE STYLE FOR THE CREATE NEW TASK BUTTON IN THE MAINUI FOR MOBILE VIEW */
+    div.headDiv + button {
+        font-size: 1rem;
+        font-weight: 400;
+    }
+}
+/* Defining media Kueries for the medium screen size*/
+@media (min-width: 430px) and (max-width: 991px) {
+    main {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+    }
+    div.aside {
+        width: 280px;
+        border-right: 0.25px solid #eee;
+        height: calc(100vh - 60px);
+    }
+    div.projectDisplay {
+        height: 130px;
+    }
+    div.container {
+        width: calc(100vw - 280px);
+        border-right: 0.25px solid #eee;
+        padding: 0 20px 10px;
+        height: calc(100vh - 60px);
+    }
+    div.file {
+        display: none;
+    }
+}
+
+@media (min-height: 580px) and (max-height: 750px) {
+    div.projectDisplay {
+        height: 260px;
+    }
+}
+@media (min-height: 751px) {
+    div.projectDisplay {
+        height: 38%;
+    }
+    div.addProjectBox, div.editProjectBox, div.addTaskBox, div.deleteDialogueBox {
+        min-height: max-content;
+    }
+}
+
+@media (min-width: 992px) {
+    main {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        width: 100%;
+    }
+    div.aside {
+        width: 27%;
+        border-right: 0.25px solid #eee;
+        height: calc(100vh - 60px);
+    }
+    div.container {
+        width: 47%;
+        border-right: 0.25px solid #eee;
+        padding: 0 20px 10px;
+        height: calc(100vh - 60px);
+    }
+    div.file {
+        width: 26%;
+    }
 }

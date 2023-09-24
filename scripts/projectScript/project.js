@@ -29,6 +29,7 @@ closeSideBtn.style.display = 'block';
 closeSideBtn.addEventListener('click', closeSideBarFun);
 
 function closeSideBarFun() {
+    console.log('closed');
     closeSideBtn.style.display = 'none';
     side.style.left = '-450px';
     side.style.width = '0';
@@ -110,7 +111,7 @@ function getFormData() {
         projectDisplay.textContent = '';
         loopThrough()
         //if the width of the browser is less than 991px we want to close the sideBar automatically.
-        if (window.innerWidth < 429){
+        if (window.innerWidth < 991){
             closeSideBarFun();
         }
 
@@ -145,7 +146,7 @@ function getFormData() {
         projectDisplay.textContent = '';
         loopThrough()
         //if the width of the browser is less than 991px
-        if (window.innerWidth < 429){
+        if (window.innerWidth < 991){
             closeSideBarFun();
         }
     }
@@ -1077,8 +1078,6 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         element.sharedFiles.push(fileData);
                         // Run the function to display the file that has been attached
                         displayAttached()
-                        //run the attachFileHtml function to set the HTML of the attachFile section
-                        attachFileHtml(project, element.sharedFiles.length);
                     }
                 }
                 
@@ -1152,20 +1151,14 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                     
                     //adding the deleteFileBtn's addEventListeners
                     deleteFileBtn.addEventListener('click', () => {
-
                         //use the index to delete the file
                         task.submittedFile.splice(index, 1);
                         extraDisplay.querySelector('.inputFile').value = '';
-
                         // Remove the file from the pool of other files by first locating the file
                         let fileLocation = element.sharedFiles.indexOf(ele);
                         element.sharedFiles.splice(fileLocation, 1);
-
                         //Run the function to display the rest of the attached files
                         displayAttached();
-
-                        //run the attachFileHtml function to set the HTML of the attachFile section
-                        attachFileHtml(project, element.sharedFiles.length);
                     })
                 }else {
                     let downloadBtn = document.createElement('div');
@@ -1707,89 +1700,6 @@ function markSelectedPanel(elementSpace) {
         }
     })
 }
-
-
-
-/************************* CREATE THE FUNCTIONS AND EVENT LISTENERS THAT WILL DISPLAY THE FILES 
-                                                                        IN GRID OR IN LISTS ****************************/
-
-// Create a function that will display the HTML in THE ATTACHED FILE section
-let attachedFileSec = document.querySelector('.file');
-
-function attachFileHtml(project, sharedFiles) {
-    console.log(project);
-    //clear the contents of the attachedFileSec
-    attachedFileSec.innerHTML = '';
-    if (project.length === 0) {
-        console.log('You have not created any project yet so you cannot see any file')
-    } else if (sharedFiles > 0) {
-        //SET THE HEADER ELEMENT AND ITS CONTENT
-        let fileHeader = document.createElement('div');
-        fileHeader.setAttribute('class', 'fileHeader');
-        attachedFileSec.appendChild(fileHeader);
-
-            // create the title div
-            let titleDiv = document.createElement('div');
-            titleDiv.setAttribute('class', 'title');
-            fileHeader.appendChild(titleDiv)
-
-                // create the contents for the title div
-                let h2 = document.createElement('h2');
-                h2.textContent = "Attached files";
-                titleDiv.appendChild(h2);
-
-                //create an element that houses the file view button
-                let fileView = document.createElement('div');
-                fileView.setAttribute('class', 'fileView');
-                titleDiv.appendChild(fileView);
-
-                    //set the two span buttons of the fileView element
-                    let gridBtn = document.createElement('span');
-                    let listBtn = document.createElement('span');
-                    gridBtn.setAttribute('class', '');
-                    listBtn.setAttribute('class', 'super');
-                    gridBtn.innerHTML = '<ion-icon class="grid" name="grid-outline"></ion-icon>';
-                    listBtn.innerHTML = '<ion-icon class="outline color" name="list-outline"></ion-icon>'
-                    fileView.appendChild(gridBtn);
-                    fileView.appendChild(listBtn);
-
-            //Create the fileSearch Div
-            let fileSearch = document.createElement('div');
-            fileSearch.setAttribute('class', 'fileSearch');
-            fileHeader.appendChild(fileSearch);
-
-                //create the search div that houses the searchFileInput
-                let search = document.createElement('div');
-                search.setAttribute('class', 'search');
-                fileSearch.appendChild(search);
-
-                    // Create the input Element of type search
-                    let input = document.createElement('input');
-                    input.type = 'search';
-                    input.placeholder = 'Search any files...';
-                    search.appendChild(input);
-
-                // Create the tag div that contains tags of files to be searched
-                let tags = document.createElement('div');
-                tags.setAttribute('class', 'tags');
-                fileSearch.appendChild(tags);
-
-        //Create THE fileList ELEMENT
-        let fileList = document.createElement('div');
-        fileList.setAttribute('class', 'fileList');
-        attachedFileSec.appendChild(fileList);
-
-    }
-}
-
-
-
-
-
-
-
-
-
 unaccountedFor = false;
 //THE RESIXE EVENT LISTENER TO RESIXE THE WINDOW WHEN IT IS MOBILE VIEW OR DESKTOP VIEW=>
 //Resize the side bar or close it based on the screen size
@@ -1797,7 +1707,7 @@ window.addEventListener('resize', () => {
     if(window.innerWidth > 991){
         side.style.width = 'inherit';
         closeSideBtn.style.display = 'none';
-    }else if(window.innerWidth < 429 && unaccountedFor !== true){
+    }else if(window.innerWidth < 991 && unaccountedFor !== true){
         side.style.left = '-255px';
         side.style.width = '0';
         unaccountedFor = !unaccountedFor;
@@ -1810,15 +1720,15 @@ search.addEventListener('focus', () => {
 })
  
 
-// //Function to check if the project is empty and display a smokeScreen if empty
-// function fileScreen() {
-//     let fileSection = document.querySelector('.file');
-//     let smokeScreen = document.querySelector('.fileSmokeScreen');
-//     if(project.length === 0) {
-//         smokeScreen.style.position = 'absolute';
-//         smokeScreen.style.top = '0';
-//         smokeScreen.style.width = fileSection.clientWidth + 'px';
-//         smokeScreen.style.height = 'inherit';
-//     }
-// }
-// fileScreen();
+//Function to check if the project is empty and display a smokeScreen if empty
+function fileScreen() {
+    let fileSection = document.querySelector('.file');
+    let smokeScreen = document.querySelector('.fileSmokeScreen');
+    if(project.length === 0) {
+        smokeScreen.style.position = 'absolute';
+        smokeScreen.style.top = '0';
+        smokeScreen.style.width = fileSection.clientWidth + 'px';
+        smokeScreen.style.height = 'inherit';
+    }
+}
+fileScreen();
