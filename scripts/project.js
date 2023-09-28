@@ -1727,6 +1727,7 @@ let gridView = false;
 let listView = true;
 
 
+
 function displayFiles() {
     let container = document.querySelector('.fileListContainer');
     container.innerHTML = '';
@@ -1738,14 +1739,53 @@ function displayFiles() {
     }
 }
 
-// Function to display tags
+// Create the searchTag Array that indexes the type of file Extension to be searched for
+let searchTag = [];
+// Function to display tags of file Extension to be searched for
 function displayTags(elementSpace) {
     // get the tags fromm each of the sharedFiles 
-    return tags = project[elementSpace].sharedFiles.reduce((accumulator, ele) => { 
+    let tags = project[elementSpace].sharedFiles.reduce((accumulator, ele) => { 
         if(ele !== '') {
             return [...accumulator, ele.fileTag()];
         }
-    }, [])
+    }, []);
+    // Get tags without repetition of its elements
+    let refinedTags = [...new Set(tags)];
+
+    // Get the tag contaner that wll house the tags
+    let filetags = document.querySelector('.tags');
+
+    // iterate over the tags creating element to house the individual tag
+    refinedTags.forEach((eachTag) => {
+        let tag = document.createElement('span');
+        tag.setAttribute('class', 'tag');
+        filetags.appendChild(tag);
+        tag.textContent = `${eachTag}`;
+
+        // Creating a Flag that tracks the state of the tag when clicked
+        let tagState = false;
+        tag.addEventListener('click', () => {
+            if(tagState){
+                // if tagState is TRUE ; change the tagState to FALSE and REMOVE IT FROM THE searchTag array and also change the styling
+                tagState = !tagState;
+                // get the index of the fileExtension that has been added to the SEARCHTAG
+                let tagIndex = searchTag.indexOf(eachTag);
+                searchTag.splice(tagIndex, 1);
+
+                // Remove the selected styling
+                tag.classList.remove('selected');
+
+            } else {
+                // if tagState is FALSE ; change the tagState to TRUE and ADD IT TO THE searchTag array and also change the styling
+                tagState = !tagState;
+                // Add the tag(the fileExtension) to the SEARCHTAG
+                searchTag.push(eachTag);
+
+                // Add the stylng 
+                tag.classList.add('selected');
+            }
+        })
+    })
 }
 
 // Function to display files in list format

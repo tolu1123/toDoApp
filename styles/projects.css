@@ -735,10 +735,26 @@ div.file div.fileSearch input {
     background-size: 16px 16px;
     border-radius: 3px;
 }
+/* Styling the TAG SECTION */
 div.tags {
-    padding: 1rem 0 0;
+    padding: 1rem 0;
     border-bottom: 1px solid #eee;
     /* height: 20px; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+span.tag {
+    display: inline-block;
+    background-color: #dfdfdf;
+    font-size: 1.05rem;
+    padding: 3px 5.5px;
+    margin-left: 4px;
+    border-radius: 4px;
+}
+.selected {
+    color: rgb(77, 35, 212);
+    border: 1px solid rgb(77, 35, 212);
 }
 div.fileList {
     width: 100%;
