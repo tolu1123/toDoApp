@@ -600,7 +600,7 @@ div.bodyMain {
     aspect-ratio: 1 / 1;
     border-radius: 50%;
     background-color: #dfdfdf;
-    font-size: 1.9rem;
+    font-size: 1.65rem;
 }
 .nameDateDiv {
     display: flex;
@@ -617,7 +617,8 @@ div.bodyMain {
 }
 .dateTimePlaceholder {
     font-size: 0.9rem;
-    color: rgba(0 ,0 ,0 ,0.4);
+    font-weight: 500;
+    color: rgba(0 ,0 ,0 ,0.5);
 }
 .dateTimePlaceholder i {
     font-size: 0.6rem;
@@ -702,8 +703,8 @@ div.file div.title > div.fileView {
     gap: 5px;
 }
 div.file  div.title > div.fileView > span {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     font-size: 1.5rem;
     color: #aaa;
     display: flex;
@@ -713,19 +714,23 @@ div.file  div.title > div.fileView > span {
 .super {
     background-color: rgb(43, 106, 241);
 }
-.color {
+.super ion-icon {
     color: #fff;
     --ionicon-stroke-width: 48px;
+}
+ion-icon {
+    color: #000;
+    font-size: 1.5rem;
 }
 div.file div.fileSearch{
     width: 100%;
 }
 div.file div.fileSearch input {
     height: 3.2rem;
-    padding: 0.4rem 0 0.4rem 2.6rem;
+    padding: 0.4rem 0 0.4rem 2.8rem;
     font-size: 1.45rem;
     font-weight: 400;
-    letter-spacing: 0.7px;
+    letter-spacing: 0.5px;
     background-position: 10px center;
     background-size: 16px 16px;
     border-radius: 3px;
@@ -738,14 +743,76 @@ div.tags {
 div.fileList {
     width: 100%;
     height: 1500px;
-    background-color: pink;
     padding: 20px;
 }
+h3.fileListTitle, h3.fileSearchTitle {
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+/* Styling that applies to the File cards when they are in LISTVIEW */
+div.fileCard {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    padding: 0;
+    margin: 7px 0;
+}
+div.fileCard div.iconDiv {
+    width: 16%;
+    aspect-ratio: 1/1;
+    display: flex;
+}
+div.fileCard div.iconDiv i {
+    font-size: 1.2rem;
+}
+div.fileCard div.nameDateDiv {
+    width: 69%;
+}
+div.fileCard div.fileSizeDiv {
+    width: 15%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Styling the fileCards when they are in gridView */
+div.fileCardGrid {
+    width: auto;
+    border: 2px solid rgba(120, 120, 120, 0.5);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 7px 10px;
+    box-shadow: 3px 3px 5px 0 rgba(120, 120, 120, 0.5);
+}
+div.fileCardGrid div.iconDiv {
+    width: auto;
+    height: 60px;
+    display: flex;
+    border-radius: 0;
+}
+div.fileCardGrid div.iconDiv i {
+    font-size: 2.3rem;
+}
+div.fileCardGrid div.nameDateDiv {
+    width: auto;
+    margin: 5px 10px;
+}
+div.fileCardGrid div.fileSizeDiv {
+    width: auto;
+    margin: 5px 10px; 
+}
+/* Setting the default value for the "searchResultEle" ELEMENT */
+div.searchResultEle {
+    display: none;
+}
 /************************************* MEDIA KUERIES GOES HERE *************************************/
-@media (min-width: 500px) and (max-width: 700px) {
+@media (min-width: 500px) {
     .iconDiv {
         width: 8%;
-        font-size: 1.7rem;
+        font-size: 1.6rem;
     }
     .nameDateDiv {
         width: 75%;
@@ -756,23 +823,6 @@ div.fileList {
     .downloadBtn, .deleteFileBtn {
         width:8%;
         font-size: 1.7rem;
-    }
-}
-@media (min-width: 701px) and (max-width: 990px) {
-    .iconDiv {
-        width: 5%;
-        font-size: 1.8rem;
-    }
-    .nameDateDiv {
-        width: 81%;
-    }
-    .fileSizeDiv {
-        width: 9%;
-        font-size: 1.2rem;
-    }
-    .downloadBtn, .deleteFileBtn {
-        width: 5%;
-        font-size: 1.2rem;
     }
 }
 @media (max-width: 429px) {

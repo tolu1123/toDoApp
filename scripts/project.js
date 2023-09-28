@@ -144,7 +144,7 @@ function getFormData() {
         //Loop through the project Array once again
         projectDisplay.textContent = '';
         loopThrough()
-        //if the width of the browser is less than 991px
+        //if the width of the browser is less than 429px close the sidebar
         if (window.innerWidth < 429){
             closeSideBarFun();
         }
@@ -197,8 +197,8 @@ function loopThrough() {
         //ADDING EVENTLISTENERS FOR EACH PANEL SUCH THAT WHEN CLICKED- IT WILL DISPLAY A NEW U.I
         projectPanel.addEventListener('click', () => {
             panelist(element, elementId, projectPanel);
-            //if the width of the browser is less than 991px
-            if (window.innerWidth < 991){
+            //if the width of the browser is less than 429px close the side bar 
+            if (window.innerWidth < 429){
                 closeSideBarFun();
             }
         });
@@ -228,6 +228,9 @@ function displayUI(element, elementId) {
     //CALL THE HEADINGMAIN FUNCTION TO DISPLAY THE HEADING SECTION OF THE MAINUI
     headingMainUI(element, elementId);
     bodyMainUI(element, elementId);
+
+    //Also display the ATTACHED FILE SECTION
+    attachFileHtml(); 
 
 }
 //FUNCTION THAT DISPLAYS THE HEADING SECTION OF THE MAINUI
@@ -431,9 +434,8 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
         list.appendChild(taskPane);
         //THE SHOW MORE SECTION ELEMENT
         let extraDisplay = document.createElement('div');
-        extraDisplay.style.display = 'none';
-        // extraDisplay.textContent = 'LOREM IPSUM DOLOR I DO NOT KNOW WHAT I AM MEELING BUT SURELY I HAVE BEEN ABLE TO UNDERSTAND IT WELL.';
-        
+        extraDisplay.style.display = 'none'; 
+
         list.appendChild(extraDisplay);
 
         //MAKING THE CHECK BOX
@@ -977,6 +979,10 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                                 let fileName = this.file;
                                 return fileType(fileName);
                             },
+                            fileTag: function () {
+                                let fileName = this.fileName().toUpperCase();
+                                return fileName.slice(((fileName.lastIndexOf('.') - 1) >>> 0) + 2);
+                            },
                             fileSize: function () {
                                 //Data storage unit measurement
                                 let kb = 1024;
@@ -1073,12 +1079,15 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
 
                         }
                         task.submittedFile.push(fileData);
+
                         // Save the shared file into the pool of other files
                         element.sharedFiles.push(fileData);
+
                         // Run the function to display the file that has been attached
-                        displayAttached()
-                        //run the attachFileHtml function to set the HTML of the attachFile section
-                        attachFileHtml(project, element.sharedFiles.length);
+                        displayAttached();
+
+                        // Run the function that dsplays the files in the ATTACHED FILE SECTION
+                        displayFiles();
                     }
                 }
                 
@@ -1164,8 +1173,9 @@ function createTask(element, elementId, data, dataId, ulList, dayBody) {
                         //Run the function to display the rest of the attached files
                         displayAttached();
 
-                        //run the attachFileHtml function to set the HTML of the attachFile section
-                        attachFileHtml(project, element.sharedFiles.length);
+                        // Run the function that dsplays the files in the ATTACHED FILE SECTION
+                        displayFiles(); 
+
                     })
                 }else {
                     let downloadBtn = document.createElement('div');
@@ -1711,75 +1721,243 @@ function markSelectedPanel(elementSpace) {
 
 
 /************************* CREATE THE FUNCTIONS AND EVENT LISTENERS THAT WILL DISPLAY THE FILES 
-                                                                        IN GRID OR IN LISTS ****************************/
+                                                 IN GRID OR IN LISTS AND ALSO DYNAMICALLY ADD THE HTML****************************/
+// Create the flags
+let gridView = false;
+let listView = true;
+
+
+function displayFiles() {
+    let container = document.querySelector('.fileListContainer');
+    container.innerHTML = '';
+    displayTags(elementSpace);
+    if(listView) {
+        displayFilesList();
+    } else if(gridView) {
+        displayFilesGrid();
+    }
+}
+
+// Function to display tags
+function displayTags(elementSpace) {
+    // get the tags fromm each of the sharedFiles 
+    return tags = project[elementSpace].sharedFiles.reduce((accumulator, ele) => { 
+        if(ele !== '') {
+            return [...accumulator, ele.fileTag()];
+        }
+    }, [])
+}
+
+// Function to display files in list format
+function displayFilesList() {
+    console.log('Shown as a list');
+    let container = document.querySelector('.fileListContainer');
+    if(project[elementSpace].sharedFiles.length !== 0) {
+        project[elementSpace].sharedFiles.forEach((ele) => {
+             //the card for the file uploaded
+             let fileCard = document.createElement('div');
+             fileCard.setAttribute('class', 'fileCard');
+             container.appendChild(fileCard);
+
+             //the icon div that indicates the fileType
+             let iconDiv = document.createElement('div');
+             iconDiv.setAttribute('class', 'iconDiv');
+             fileCard.appendChild(iconDiv);
+             //set the icon from the element
+             iconDiv.innerHTML = ele.filePic();
+
+             //the DIV that encompasses the name of the file and the date shared
+             let nameDateDiv = document.createElement('div');
+             nameDateDiv.setAttribute('class', 'nameDateDiv');
+             fileCard.appendChild(nameDateDiv);
+
+             let namePlaceholder = document.createElement('div');
+             namePlaceholder.setAttribute('class', 'namePlaceholder');
+             nameDateDiv.appendChild(namePlaceholder);
+             //set the name content of the namePlaceholder
+             namePlaceholder.innerHTML = ele.fileName();
+
+             let dateTimePlaceholder = document.createElement('div');
+             dateTimePlaceholder.setAttribute('class', 'dateTimePlaceholder');
+             nameDateDiv.appendChild(dateTimePlaceholder);
+             //set the date and time content of the dateTimePlaceholder
+             let date = ele.daySubmitted();
+             let time = ele.timeSubmitted();
+             dateTimePlaceholder.innerHTML = `${date}-${time}`;
+             
+             
+             //the fileSize Div
+             let fileSizeDiv = document.createElement('div');
+             fileSizeDiv.setAttribute('class', 'fileSizeDiv');
+             fileCard.appendChild(fileSizeDiv);
+             //set the contents of the fileSize Div
+             fileSizeDiv.innerHTML = ele.fileSize();
+        })
+    }
+}
+
+// Function to display files in grid format
+function displayFilesGrid() {
+    console.log('Shown as a grid');
+    let container = document.querySelector('.fileListContainer');
+    if(project[elementSpace].sharedFiles.length !== 0) {
+        project[elementSpace].sharedFiles.forEach((ele) => {
+             //the card for the file uploaded
+             let fileCard = document.createElement('div');
+             fileCard.setAttribute('class', 'fileCardGrid');
+             container.appendChild(fileCard);
+
+             //the icon div that indicates the fileType
+             let iconDiv = document.createElement('div');
+             iconDiv.setAttribute('class', 'iconDiv');
+             fileCard.appendChild(iconDiv);
+             //set the icon from the element
+             iconDiv.innerHTML = ele.filePic();
+
+             //the DIV that encompasses the name of the file and the date shared
+             let nameDateDiv = document.createElement('div');
+             nameDateDiv.setAttribute('class', 'nameDateDiv');
+             fileCard.appendChild(nameDateDiv);
+
+             let namePlaceholder = document.createElement('div');
+             namePlaceholder.setAttribute('class', 'namePlaceholder');
+             nameDateDiv.appendChild(namePlaceholder);
+             //set the name content of the namePlaceholder
+             namePlaceholder.innerHTML = ele.fileName();
+
+             let dateTimePlaceholder = document.createElement('div');
+             dateTimePlaceholder.setAttribute('class', 'dateTimePlaceholder');
+             nameDateDiv.appendChild(dateTimePlaceholder);
+             //set the date and time content of the dateTimePlaceholder
+             let date = ele.daySubmitted();
+             let time = ele.timeSubmitted();
+             dateTimePlaceholder.innerHTML = `${date}-${time}`;
+             
+             
+             //the fileSize Div
+             let fileSizeDiv = document.createElement('div');
+             fileSizeDiv.setAttribute('class', 'fileSizeDiv');
+             fileCard.appendChild(fileSizeDiv);
+             //set the contents of the fileSize Div
+             fileSizeDiv.innerHTML = ele.fileSize();
+        })
+    }
+}
 
 // Create a function that will display the HTML in THE ATTACHED FILE section
 let attachedFileSec = document.querySelector('.file');
 
-function attachFileHtml(project, sharedFiles) {
-    console.log(project);
+function attachFileHtml() {
     //clear the contents of the attachedFileSec
-    attachedFileSec.innerHTML = '';
-    if (project.length === 0) {
-        console.log('You have not created any project yet so you cannot see any file')
-    } else if (sharedFiles > 0) {
-        //SET THE HEADER ELEMENT AND ITS CONTENT
-        let fileHeader = document.createElement('div');
-        fileHeader.setAttribute('class', 'fileHeader');
-        attachedFileSec.appendChild(fileHeader);
+    attachedFileSec.innerHTML = ''; 
+    //SET THE HEADER ELEMENT AND ITS CONTENT
+    let fileHeader = document.createElement('div');
+    fileHeader.setAttribute('class', 'fileHeader');
+    attachedFileSec.appendChild(fileHeader);
 
-            // create the title div
-            let titleDiv = document.createElement('div');
-            titleDiv.setAttribute('class', 'title');
-            fileHeader.appendChild(titleDiv)
+        // create the title div
+        let titleDiv = document.createElement('div');
+        titleDiv.setAttribute('class', 'title');
+        fileHeader.appendChild(titleDiv)
 
-                // create the contents for the title div
-                let h2 = document.createElement('h2');
-                h2.textContent = "Attached files";
-                titleDiv.appendChild(h2);
+            // create the contents for the title div
+            let h2 = document.createElement('h2');
+            h2.textContent = "Attached files";
+            titleDiv.appendChild(h2);
 
-                //create an element that houses the file view button
-                let fileView = document.createElement('div');
-                fileView.setAttribute('class', 'fileView');
-                titleDiv.appendChild(fileView);
+            //create an element that houses the file view button
+            let fileView = document.createElement('div');
+            fileView.setAttribute('class', 'fileView');
+            titleDiv.appendChild(fileView);
 
-                    //set the two span buttons of the fileView element
-                    let gridBtn = document.createElement('span');
-                    let listBtn = document.createElement('span');
-                    gridBtn.setAttribute('class', '');
-                    listBtn.setAttribute('class', 'super');
-                    gridBtn.innerHTML = '<ion-icon class="grid" name="grid-outline"></ion-icon>';
-                    listBtn.innerHTML = '<ion-icon class="outline color" name="list-outline"></ion-icon>'
-                    fileView.appendChild(gridBtn);
-                    fileView.appendChild(listBtn);
+                //set the two span buttons of the fileView element
+                let gridBtn = document.createElement('span');
+                let listBtn = document.createElement('span');
+                gridBtn.setAttribute('class', '');
+                listBtn.setAttribute('class', 'super');
+                gridBtn.innerHTML = '<ion-icon class="grid" name="grid-outline"></ion-icon>';
+                listBtn.innerHTML = '<ion-icon class="outline" name="list-outline"></ion-icon>'
+                fileView.appendChild(gridBtn);
+                fileView.appendChild(listBtn);
 
-            //Create the fileSearch Div
-            let fileSearch = document.createElement('div');
-            fileSearch.setAttribute('class', 'fileSearch');
-            fileHeader.appendChild(fileSearch);
+                    // Set the eventListener for the gridBtn and the listBtn
+                    gridBtn.addEventListener('click', () => {
 
-                //create the search div that houses the searchFileInput
-                let search = document.createElement('div');
-                search.setAttribute('class', 'search');
-                fileSearch.appendChild(search);
+                        //set the gridView flag
+                        gridView = true;
+                        listView = !gridView; /*Set list view to false while grid view is in a true state */
 
-                    // Create the input Element of type search
-                    let input = document.createElement('input');
-                    input.type = 'search';
-                    input.placeholder = 'Search any files...';
-                    search.appendChild(input);
+                        //add the super class to the gridBtn and remove from the listBtn
+                        gridBtn.classList.add('super');
+                        listBtn.classList.remove('super');
 
-                // Create the tag div that contains tags of files to be searched
-                let tags = document.createElement('div');
-                tags.setAttribute('class', 'tags');
-                fileSearch.appendChild(tags);
+                        // Run the displayFiles function
+                        displayFiles();
+                    })
 
-        //Create THE fileList ELEMENT
-        let fileList = document.createElement('div');
-        fileList.setAttribute('class', 'fileList');
-        attachedFileSec.appendChild(fileList);
+                    listBtn.addEventListener('click', () => {
 
-    }
+                        //set the gridView flag
+                        listView = true;
+                        gridView = !listView; /* Set gridView to false while listView is in a true state*/
+
+                        //add the super class to the gridBtn and remove from the listBtn
+                        listBtn.classList.add('super');
+                        gridBtn.classList.remove('super');
+
+                        // Run the displayFiles function
+                        displayFiles();
+                    })
+
+        //Create the fileSearch Div
+        let fileSearch = document.createElement('div');
+        fileSearch.setAttribute('class', 'fileSearch');
+        fileHeader.appendChild(fileSearch);
+
+            //create the search div that houses the searchFileInput
+            let search = document.createElement('div');
+            search.setAttribute('class', 'search');
+            fileSearch.appendChild(search);
+
+                // Create the input Element of type search
+                let input = document.createElement('input');
+                input.type = 'search';
+                input.placeholder = 'Search any files...';
+                search.appendChild(input);
+
+            // Create the tag div that contains tags of files to be searched
+            let tags = document.createElement('div');
+            tags.setAttribute('class', 'tags');
+            fileSearch.appendChild(tags);
+
+    //Create THE fileList ELEMENT
+    let fileList = document.createElement('div');
+    fileList.setAttribute('class', 'fileList');
+    attachedFileSec.appendChild(fileList);
+
+        // Create the title of the fileList element
+        let fileListTitle = document.createElement('h3');
+        fileList.appendChild(fileListTitle);
+        fileListTitle.setAttribute('class' ,'fileListTitle');
+        fileListTitle.textContent = 'Files';
+
+        // Create the container to show the file
+        let fileListContainer = document.createElement('div');
+        fileListContainer.setAttribute('class', 'fileListContainer');
+        fileList.appendChild(fileListContainer);
+
+    // Create the fileSearch ELEMENT
+    let searchResultEle = document.createElement('div');
+    searchResultEle.setAttribute('class', 'searchResultEle');
+    attachedFileSec.appendChild(searchResultEle);
+
+        // Create the title of the fileList element
+        let fileSearchTitle = document.createElement('h3');
+        searchResultEle.appendChild(fileSearchTitle);
+        fileSearchTitle.setAttribute('class' ,'fileSearchTitle');
+        fileSearchTitle.textContent = 'Files search results';
+
+
 }
 
 
@@ -1794,10 +1972,10 @@ unaccountedFor = false;
 //THE RESIXE EVENT LISTENER TO RESIXE THE WINDOW WHEN IT IS MOBILE VIEW OR DESKTOP VIEW=>
 //Resize the side bar or close it based on the screen size
 window.addEventListener('resize', () => {
-    if(window.innerWidth > 991){
-        side.style.width = 'inherit';
+    if(window.innerWidth >= 430){
+        side.style.width = '100%';
         closeSideBtn.style.display = 'none';
-    }else if(window.innerWidth < 429 && unaccountedFor !== true){
+    } else if(window.innerWidth <= 429 && unaccountedFor !== true){
         side.style.left = '-255px';
         side.style.width = '0';
         unaccountedFor = !unaccountedFor;
